@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Privacy Policy — Flourishing Entrepreneurs and Mentors{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 4rem 1.5rem;">
+  <div style="margin-bottom: 2.5rem;">
+    <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--secondary); margin-bottom: 0.5rem;">
+      Privacy Policy
+    </h1>
+    <span style="font-size: 0.875rem; color: var(--text-muted);">Last Updated: October 2026</span>
+  </div>
+
+  <div class="card" style="padding: 2.5rem; line-height: 1.7; color: var(--text-secondary);">
+    <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">1. Information We Collect</h3>
+    <p style="margin-bottom: 1.5rem;">
+      Flourishing Entrepreneurs and Mentors (FEM) collects information necessary to match entrepreneurs with mentors and foster ecosystem collaboration. This includes registration details (name, email, city, region), business profiles, problem statements, and mentorship history.
+    </p>
+
+    <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">2. Problem Matching and Transparency</h3>
+    <p style="margin-bottom: 1.5rem;">
+      Submitted business challenges are used strictly to run our problem-based matching engine. We calculate similarity scores against mentor profiles and experience records. Your contact details remain confidential until you explicitly send or accept a mentorship request.
+    </p>
+
+    <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">3. Offline Data Storage</h3>
+    <p style="margin-bottom: 1.5rem;">
+      FEM utilizes browser IndexedDB and the Cache API to enable offline functionality. Data stored locally on your device (such as draft problems or queued messages) is encrypted by your browser's origin sandbox and transmitted to FEM servers only when network connectivity is available.
+    </p>
+
+    <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">4. Data Protection & Security</h3>
+    <p style="margin-bottom: 1.5rem;">
+      We use industry-standard password hashing, CSRF protection, and secure server-side ownership validations to safeguard your account. We never sell user information to third-party advertisers.
+    </p>
+
+    <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">5. Contacting Us</h3>
+    <p>
+      If you have questions regarding your data or wish to delete your account, visit your <a href="{% url 'accounts:settings' %}" style="color: var(--primary);">Account Settings</a> or <a href="{% url 'contact' %}" style="color: var(--primary);">Contact Support</a>.
+    </p>
+  </div>
+</div>
+{% endblock %}

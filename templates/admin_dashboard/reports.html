@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Content Moderation — Admin Console{% endblock %}
+
+{% block layout %}
+<div class="dashboard-layout">
+  {% include "admin_dashboard/sidebar.html" %}
+
+  <main class="dashboard-content">
+    <div class="mb-6">
+      <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">Community Content Moderation</h1>
+      <p style="color: var(--text-secondary); margin: 0;">Review community posts flagged by members for potential violations or spam.</p>
+    </div>
+
+    {% if reported_posts %}
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        {% for post in reported_posts %}
+          <div class="card" style="padding: 1.75rem; border-left: 4px solid #EF4444;">
+            <div class="flex justify-between items-center mb-2">
+              <span class="badge badge-red">Flagged by Community</span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Posted on {{ post.created_at|date:"d M Y @ H:i" }}</span>
+            </div>
+
+            <h3 style="color: var(--secondary); margin-bottom: 0.5rem; font-size: 1.15rem;">{{ post.title }}</h3>
+            <div style="font-size: 0.825rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+              Author: <strong>{{ post.author.username }}</strong> ({{ post.author.get_role_display }})
+            </div>
+
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.25rem; background: var(--bg-app); padding: 1rem; border-radius: var(--radius-sm);">
+              {{ post.content }}
+            </p>
+
+            <form method="POST" action="{% url 'admin_dashboard:reports' %}" style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+              {% csrf_token %}
+              <input type="hidden" name="post_id" value="{{ post.id }}">
+              <button type="submit" name="action" value="dismiss" class="btn btn-sm btn-outline">Dismiss Flag (Keep Post)</button>
+              <button type="submit" name="action" value="delete" class="btn btn-sm btn-primary" style="background: #DC2626; border-color: #DC2626;">Permanently Remove Post</button>
+            </form>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="card text-center" style="padding: 4rem 2rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🛡️</div>
+        <h3>No flagged content</h3>
+        <p style="color: var(--text-secondary); max-width: 480px; margin: 0.5rem auto 1.5rem auto;">
+          All community posts and discussions comply with FEM community standards.
+        </p>
+        <a href="{% url 'admin_dashboard:overview' %}" class="btn btn-outline">&larr; Return to Overview</a>
+      </div>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}

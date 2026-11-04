@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Flourishing Entrepreneurs and Mentors — Find Mentors Who Solved Your Problem{% endblock %}
+
+{% block layout %}
+<div class="landing-page-wrap">
+
+  <!-- HERO SECTION -->
+  <section class="hero-section" style="padding: 5rem 1.5rem 4rem 1.5rem; background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%); border-bottom: 1px solid var(--border-color); text-align: center;">
+    <div class="container container-narrow">
+      <div style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.85rem; border-radius: var(--radius-full); background: var(--primary-subtle); border: 1px solid #CCFBF1; color: var(--primary-hover); font-size: 0.825rem; font-weight: 700; margin-bottom: 1.5rem;">
+        <span>🎯 Problem-First Mentorship Ecosystem</span>
+      </div>
+
+      <h1 style="font-size: 3.25rem; font-weight: 800; line-height: 1.15; color: var(--secondary); letter-spacing: -0.03em; margin-bottom: 1.25rem;">
+        Find the right mentor for the <span style="color: var(--primary); text-decoration: underline; text-decoration-color: #99F6E4;">problem</span> you're facing.
+      </h1>
+
+      <p style="font-size: 1.2rem; color: var(--text-secondary); line-height: 1.6; max-width: 720px; margin: 0 auto 2.25rem auto;">
+        Connect with mentors who have real, verified experience solving challenges like yours—and collaborate with entrepreneurs who understand your journey.
+      </p>
+
+      <div class="flex justify-center items-center gap-4" style="flex-wrap: wrap;">
+        <a href="{% if user.is_authenticated %}{% url 'entrepreneur:problem_create' %}{% else %}{% url 'signup' %}?role=entrepreneur{% endif %}" class="btn btn-lg btn-primary" style="font-size: 1.1rem; padding: 0.9rem 2rem;">
+          Find My Mentor
+        </a>
+        <a href="{% url 'community:feed' %}" class="btn btn-lg btn-outline" style="font-size: 1.1rem; padding: 0.9rem 2rem;">
+          Join the Community
+        </a>
+      </div>
+
+      <div class="flex justify-center items-center gap-8 mt-6" style="font-size: 0.85rem; color: var(--text-muted); flex-wrap: wrap;">
+        <span>✓ Experience-Verified Mentors</span>
+        <span>✓ Offline-First PWA Sync</span>
+        <span>✓ Real Impact Mentor Credits</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. THE PROBLEM SECTION -->
+  <section style="padding: 4.5rem 1.5rem; background: var(--bg-surface); border-bottom: 1px solid var(--border-color);">
+    <div class="container container-narrow">
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <span class="badge badge-amber" style="margin-bottom: 0.5rem;">The Challenge</span>
+        <h2>Entrepreneurs often struggle to find the right guidance.</h2>
+        <p style="max-width: 650px; margin: 0.5rem auto 0 auto;">
+          Generic directories and high-level advice fail when you're trapped in specific, high-stakes bottlenecks.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+        <div class="card" style="border-left: 4px solid #EF4444;">
+          <h4 style="margin-bottom: 0.5rem;">Receivables & Cash Flow</h4>
+          <p style="font-size: 0.9rem;">"My rural food business produces high-demand products, but 60-day distributor payment cycles cause constant inventory shortages."</p>
+        </div>
+        <div class="card" style="border-left: 4px solid #F59E0B;">
+          <h4 style="margin-bottom: 0.5rem;">Pricing & Margins</h4>
+          <p style="font-size: 0.9rem;">"I don't know how to price my artisanal goods to cover genuine craft labor without losing price-conscious regional buyers."</p>
+        </div>
+        <div class="card" style="border-left: 4px solid #3B82F6;">
+          <h4 style="margin-bottom: 0.5rem;">Distribution & Supply Chain</h4>
+          <p style="font-size: 0.9rem;">"Unreliable cold-chain transport and warehouse costs eat into 18% of my seasonal agricultural batch margins."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. THE SOLUTION & HOW IT WORKS -->
+  <section style="padding: 5rem 1.5rem; background: var(--bg-app); border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 3.5rem;">
+        <span class="badge badge-teal" style="margin-bottom: 0.5rem;">Problem-Based Matching</span>
+        <h2>How It Works</h2>
+        <p style="max-width: 600px; margin: 0.5rem auto 0 auto;">
+          You don't browse endless directories. You start with the exact business problem you face today.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.5rem;">
+        <div class="card text-center" style="padding: 2rem 1.5rem;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary-hover); font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">1</div>
+          <h4 style="margin-bottom: 0.4rem;">Describe Problem</h4>
+          <p style="font-size: 0.85rem;">Tell us what you're struggling with in your own words, from cash crunches to supply gaps.</p>
+        </div>
+
+        <div class="card text-center" style="padding: 2rem 1.5rem;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary-hover); font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">2</div>
+          <h4 style="margin-bottom: 0.4rem;">Analyze Needs</h4>
+          <p style="font-size: 0.85rem;">FEM maps your challenge against verified mentor expertise, industry, and previous outcomes.</p>
+        </div>
+
+        <div class="card text-center" style="padding: 2rem 1.5rem;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary-hover); font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">3</div>
+          <h4 style="margin-bottom: 0.4rem;">Suitable Mentors</h4>
+          <p style="font-size: 0.85rem;">Review transparent match scores and detailed explanations: "Why this mentor?"</p>
+        </div>
+
+        <div class="card text-center" style="padding: 2rem 1.5rem;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary-hover); font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">4</div>
+          <h4 style="margin-bottom: 0.4rem;">Connect & Solve</h4>
+          <p style="font-size: 0.85rem;">Request mentorship, schedule diagnostic sessions, and execute tactical solutions.</p>
+        </div>
+
+        <div class="card text-center" style="padding: 2rem 1.5rem;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary-hover); font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">5</div>
+          <h4 style="margin-bottom: 0.4rem;">Grow & Contribute</h4>
+          <p style="font-size: 0.85rem;">Collaborate with peer entrepreneurs and build collective resilience across regions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. FEATURED MENTORS & MENTOR CREDITS -->
+  <section style="padding: 5rem 1.5rem; background: var(--bg-surface); border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <span class="badge badge-amber" style="margin-bottom: 0.35rem;">Real Impact Metrics</span>
+          <h2>Mentor Credits System</h2>
+          <p style="font-size: 0.95rem;">Impact is measured by verified hours, rural businesses supported, and real problems resolved—not vanity follower counters.</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+        {% for mentor in featured_mentors %}
+          <div class="mentor-card">
+            <div class="mentor-card-header">
+              <img src="{{ mentor.user.avatar_url|default:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' }}" alt="{{ mentor.user.get_full_name }}" class="mentor-avatar">
+              <div class="mentor-info">
+                <div class="mentor-name">
+                  {{ mentor.user.get_full_name }}
+                  {% if mentor.is_verified %}
+                    <span class="badge badge-verified" title="Verified Mentor">✓ Verified</span>
+                  {% endif %}
+                </div>
+                <div class="mentor-title">{{ mentor.professional_title }}</div>
+              </div>
+            </div>
+
+            <!-- Mentor Metrics -->
+            <div class="mentor-metrics-row">
+              <div class="metric-item">
+                <span class="metric-val">⭐ {{ mentor.credits.entrepreneurs_mentored }}</span>
+                <span class="metric-lbl">Mentored</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-val">⏱️ {{ mentor.credits.mentoring_hours }}h</span>
+                <span class="metric-lbl">Hours</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-val">🌾 {{ mentor.credits.rural_businesses_supported }}</span>
+                <span class="metric-lbl">Rural Co.</span>
+              </div>
+            </div>
+
+            <!-- Expertises -->
+            <div class="tags-wrap">
+              {% for exp in mentor.expertises.all|slice:":3" %}
+                <span class="tag-pill">{{ exp.name }}</span>
+              {% endfor %}
+            </div>
+
+            <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: auto;">
+              <a href="{% if user.is_authenticated %}{% url 'entrepreneur:mentor_detail' mentor.id %}{% else %}{% url 'login' %}{% endif %}" class="btn btn-outline-primary btn-full">
+                View Mentor Profile & Experience
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. ENTREPRENEUR-TO-ENTREPRENEUR COLLABORATION -->
+  <section style="padding: 5rem 1.5rem; background: var(--bg-app); border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <span class="badge badge-teal" style="margin-bottom: 0.35rem;">Peer Ecosystem</span>
+          <h2>Entrepreneur-to-Entrepreneur Collaboration</h2>
+          <p style="font-size: 0.95rem;">FEM is not just Entrepreneur → Mentor. It empowers entrepreneurs to share supply chains, pooling resources and co-marketing.</p>
+        </div>
+        <a href="{% url 'collaboration:board' %}" class="btn btn-outline">View All Collaboration Requests</a>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+        {% for collab in recent_collabs %}
+          <div class="card">
+            <span class="badge badge-teal" style="margin-bottom: 0.75rem;">{{ collab.get_collaboration_type_display }}</span>
+            <h4 style="margin-bottom: 0.5rem;">{{ collab.title }}</h4>
+            <p style="font-size: 0.875rem; margin-bottom: 1rem;">{{ collab.description|truncatewords:25 }}</p>
+            <div class="tags-wrap mb-4">
+              {% for tag in collab.tag_list %}
+                <span class="tag-pill">{{ tag }}</span>
+              {% endfor %}
+            </div>
+            <div class="flex justify-between items-center" style="border-top: 1px solid var(--border-color); padding-top: 0.85rem;">
+              <span style="font-size: 0.8rem; color: var(--text-muted);">{{ collab.entrepreneur.display_name }} ({{ collab.location }})</span>
+              <a href="{% url 'collaboration:board' %}" class="btn btn-sm btn-primary">Interested</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. SUCCESS & FAILURE STORIES -->
+  <section style="padding: 5rem 1.5rem; background: var(--bg-surface); border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <span class="badge badge-amber" style="margin-bottom: 0.35rem;">Candid Field Wisdom</span>
+          <h2>Success & Failure Stories</h2>
+          <p style="font-size: 0.95rem;">We normalize failure as a vital learning stepping stone. Every story maps: <em>What happened → What I learned → What I would do differently.</em></p>
+        </div>
+        <a href="{% url 'stories:story_list' %}" class="btn btn-outline">Explore Stories</a>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+        {% for story in featured_stories %}
+          <div class="card {% if story.story_type == 'FAILURE' %}story-failure{% else %}story-success{% endif %}" style="display: flex; flex-direction: column;">
+            <span class="story-badge {% if story.story_type == 'FAILURE' %}story-badge-failure{% else %}story-badge-success{% endif %}">
+              {{ story.get_story_type_display.split|first }} Story
+            </span>
+            <h4 style="margin-bottom: 0.4rem;"><a href="{% url 'stories:story_detail' story.id %}">{{ story.title }}</a></h4>
+            <div style="font-size: 0.775rem; color: var(--text-muted); margin-bottom: 0.75rem;">{{ story.business_context }}</div>
+            <p style="font-size: 0.875rem; margin-bottom: 1.25rem;">{{ story.summary|truncatewords:24 }}</p>
+
+            <div style="background: var(--bg-app); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: var(--radius-sm); margin-top: auto;">
+              <strong style="font-size: 0.75rem; text-transform: uppercase; color: var(--primary);">Key Takeaway:</strong>
+              <div style="font-size: 0.85rem; font-style: italic; color: var(--text-primary); margin-top: 0.2rem;">"{{ story.key_takeaway }}"</div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. OFFLINE-FIRST ARCHITECTURE -->
+  <section style="padding: 4.5rem 1.5rem; background: var(--secondary); color: white;">
+    <div class="container container-narrow text-center">
+      <div style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.85rem; border-radius: var(--radius-full); background: rgba(255,255,255,0.1); color: #5EEAD4; font-size: 0.825rem; font-weight: 700; margin-bottom: 1.5rem;">
+        <span>⚡ Built for Low & Intermittent Connectivity</span>
+      </div>
+
+      <h2 style="color: white; font-size: 2.25rem; font-weight: 800; margin-bottom: 1rem;">
+        An Offline-First Community Architecture
+      </h2>
+
+      <p style="color: #94A3B8; font-size: 1.05rem; line-height: 1.6; max-width: 680px; margin: 0 auto 2.5rem auto;">
+        Entrepreneurs in remote or rural locations shouldn't be blocked by unreliable networks. Create posts, draft problems, message collaborators, and record insights even when completely disconnected. FEM saves everything locally in IndexedDB and automatically synchronizes when connectivity returns.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; text-align: left;">
+        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); padding: 1.25rem;">
+          <h4 style="color: #F8FAFC; margin-bottom: 0.35rem;">Service Worker Cache</h4>
+          <p style="font-size: 0.825rem; color: #94A3B8;">App shell, dashboards, and static assets remain functional without connection.</p>
+        </div>
+        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); padding: 1.25rem;">
+          <h4 style="color: #F8FAFC; margin-bottom: 0.35rem;">IndexedDB Queue</h4>
+          <p style="font-size: 0.825rem; color: #94A3B8;">Operations are queued safely on-device with zero data loss.</p>
+        </div>
+        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); padding: 1.25rem;">
+          <h4 style="color: #F8FAFC; margin-bottom: 0.35rem;">Conflict Resolution</h4>
+          <p style="font-size: 0.825rem; color: #94A3B8;">Transactional batch sync automatically reconciles server and client state.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. FINAL CALL TO ACTION -->
+  <section style="padding: 5rem 1.5rem; background: linear-gradient(135deg, #0F766E, #0D9488); color: white; text-align: center;">
+    <div class="container container-narrow">
+      <h2 style="color: white; font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.2;">
+        Your next breakthrough may begin with the right conversation.
+      </h2>
+      <p style="color: #CCFBF1; font-size: 1.15rem; max-width: 600px; margin: 0 auto 2rem auto;">
+        Join Flourishing Entrepreneurs and Mentors today. Solve real business problems with practitioners who have walked your path.
+      </p>
+
+      <div class="flex justify-center items-center gap-4">
+        <a href="{% url 'signup' %}" class="btn btn-lg btn-secondary" style="background: #0F172A; border-color: #0F172A; padding: 0.9rem 2.25rem; font-size: 1.1rem;">
+          Get Started as Entrepreneur or Mentor
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background-color: var(--bg-surface); border-top: 1px solid var(--border-color); padding: 3rem 1.5rem;">
+    <div class="container flex justify-between items-center" style="flex-wrap: wrap; gap: 1.5rem;">
+      <div class="brand">
+        <div class="brand-icon">FEM</div>
+        <div class="brand-text">
+          <span class="brand-title">Flourishing Entrepreneurs and Mentors</span>
+          <span class="brand-subtitle">Empowering regional & rural entrepreneurial ecosystems</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-6" style="font-size: 0.875rem;">
+        <a href="{% url 'community:feed' %}">Community</a>
+        <a href="{% url 'collaboration:board' %}">Collaborate</a>
+        <a href="{% url 'stories:story_list' %}">Stories</a>
+        <a href="{% url 'login' %}">Sign In</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+{% endblock %}

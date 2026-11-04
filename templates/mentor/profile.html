@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit Mentor Profile — FEM{% endblock %}
+
+{% block layout %}
+<div class="dashboard-layout">
+  {% include "mentor/sidebar.html" %}
+
+  <main class="dashboard-content">
+    <div class="mb-6">
+      <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">Mentor Advisory Profile</h1>
+      <p style="color: var(--text-secondary); margin: 0;">Highlight your verified industry background, functional expertises, and problems previously solved.</p>
+    </div>
+
+    <form method="POST" action="{% url 'mentor:profile' %}">
+      {% csrf_token %}
+
+      <!-- Basic Profile Details -->
+      <div class="card mb-6" style="padding: 2rem;">
+        <h3 style="color: var(--secondary); margin-bottom: 1.25rem;">Personal Information</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div class="form-group">
+            <label class="form-label" for="m-fname">First Name</label>
+            <input type="text" id="m-fname" name="first_name" class="form-control" value="{{ profile.user.first_name }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="m-lname">Last Name</label>
+            <input type="text" id="m-lname" name="last_name" class="form-control" value="{{ profile.user.last_name }}">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div class="form-group">
+            <label class="form-label" for="m-city">City / District</label>
+            <input type="text" id="m-city" name="city" class="form-control" value="{{ profile.user.city|default:'' }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="m-region">State / Region</label>
+            <input type="text" id="m-region" name="region" class="form-control" value="{{ profile.user.region|default:'' }}">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="m-bio">About You</label>
+          <textarea id="m-bio" name="bio" class="form-control" rows="3">{{ profile.user.bio }}</textarea>
+        </div>
+      </div>
+
+      <!-- Advisory Credentials -->
+      <div class="card mb-6" style="padding: 2rem;">
+        <h3 style="color: var(--secondary); margin-bottom: 1.25rem;">Advisory Credentials</h3>
+        <div class="form-group">
+          <label class="form-label" for="professional_title">Professional Title *</label>
+          <input type="text" id="professional_title" name="professional_title" class="form-control" value="{{ profile.professional_title }}" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div class="form-group">
+            <label class="form-label" for="primary_industry">Primary Industry</label>
+            <input type="text" id="primary_industry" name="primary_industry" class="form-control" value="{{ profile.primary_industry }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="years_of_experience">Years of Experience</label>
+            <input type="number" id="years_of_experience" name="years_of_experience" class="form-control" value="{{ profile.years_of_experience }}">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="biography">Mentor Statement & Philosophy</label>
+          <textarea id="biography" name="biography" class="form-control" rows="4">{{ profile.biography }}</textarea>
+        </div>
+
+        <!-- Areas of Expertise -->
+        <div class="form-group">
+          <label class="form-label">Functional Expertise Areas</label>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; background: var(--bg-app); padding: 1.25rem; border-radius: var(--radius-sm);">
+            {% for exp in all_expertises %}
+              <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; cursor: pointer;">
+                <input type="checkbox" name="expertises" value="{{ exp.id }}" {% if exp in profile.expertises.all %}checked{% endif %}>
+                <span>{{ exp.name }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 2rem; margin-top: 1rem;">
+          <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; cursor: pointer;">
+            <input type="checkbox" name="rural_business_experience" {% if profile.rural_business_experience %}checked{% endif %}>
+            <span>Experience with Rural / Grassroots Businesses</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; cursor: pointer;">
+            <input type="checkbox" name="is_accepting_mentees" {% if profile.is_accepting_mentees %}checked{% endif %}>
+            <span>Currently Accepting New Mentees</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Add Verified Past Experience Record -->
+      <div class="card mb-6" style="padding: 2rem; border-left: 4px solid var(--primary);">
+        <h3 style="color: var(--secondary); margin-bottom: 0.5rem;">Document a Solved Business Problem</h3>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+          Our problem-matching engine uses your documented past outcomes to match you with founders facing identical bottlenecks.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div class="form-group">
+            <label class="form-label" for="new_problem_type">Challenge Solved (e.g. Cash Flow Timing, Cold Chain Spoilage)</label>
+            <input type="text" id="new_problem_type" name="new_problem_type" class="form-control" placeholder="Specific problem type...">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="new_exp_industry">Sector / Industry</label>
+            <input type="text" id="new_exp_industry" name="new_exp_industry" class="form-control" placeholder="e.g. Agri-Food, Retail...">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="new_exp_desc">Description of Challenge</label>
+          <input type="text" id="new_exp_desc" name="new_exp_desc" class="form-control" placeholder="Context of the situation faced by the enterprise...">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="new_exp_outcome">Measurable Outcome Achieved</label>
+          <input type="text" id="new_exp_outcome" name="new_exp_outcome" class="form-control" placeholder="e.g. Negotiated 30-day supplier credit window and reduced spoilage by 22%...">
+        </div>
+      </div>
+
+      <!-- Existing Experiences List -->
+      {% if profile.experiences.all %}
+        <div class="card mb-6" style="padding: 2rem;">
+          <h3 style="color: var(--secondary); margin-bottom: 1rem;">Documented Case History ({{ profile.experiences.count }})</h3>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            {% for exp in profile.experiences.all %}
+              <div style="background: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem;">
+                <div class="flex justify-between items-center mb-1">
+                  <strong style="color: var(--primary);">{{ exp.problem_type }}</strong>
+                  <span class="badge badge-teal">{{ exp.industry }}</span>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.25rem 0;">{{ exp.description }}</p>
+                <div style="font-size: 0.85rem; color: #059669; font-weight: 600;">
+                  Outcome: {{ exp.outcome }}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="flex justify-between items-center">
+        <a href="{% url 'mentor:dashboard' %}" class="btn btn-outline">Cancel</a>
+        <button type="submit" class="btn btn-primary btn-lg">Save Mentor Profile</button>
+      </div>
+    </form>
+  </main>
+</div>
+{% endblock %}

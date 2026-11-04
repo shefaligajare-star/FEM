@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}My Problems — FEM{% endblock %}
+
+{% block layout %}
+<div class="app-layout">
+  {% include "entrepreneur/sidebar.html" %}
+
+  <main class="main-content">
+    <div class="section-header">
+      <div>
+        <h1>My Business Challenges</h1>
+        <p style="color: var(--text-muted);">Problems submitted for mentor evaluation and recommendations.</p>
+      </div>
+      <a href="{% url 'entrepreneur:problem_create' %}" class="btn btn-primary">
+        + Describe New Problem
+      </a>
+    </div>
+
+    {% if problems %}
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem;">
+        {% for prob in problems %}
+          <div class="problem-card">
+            <div class="problem-header">
+              <span class="badge {% if prob.status == 'MATCHED' %}badge-teal{% elif prob.status == 'OPEN' %}badge-amber{% else %}badge-emerald{% endif %}">
+                {{ prob.get_status_display }}
+              </span>
+              <span style="font-size: 0.775rem; color: var(--text-muted);">{{ prob.created_at|date:"M d, Y" }}</span>
+            </div>
+
+            <h3 class="problem-title">
+              <a href="{% url 'entrepreneur:problem_matches' prob.id %}">{{ prob.title }}</a>
+            </h3>
+
+            <p class="problem-desc">{{ prob.description|truncatewords:28 }}</p>
+
+            <div class="tags-wrap mb-4">
+              <span class="tag-pill">{{ prob.industry }}</span>
+              <span class="tag-pill">{{ prob.business_stage }}</span>
+              {% if prob.is_rural_business %}
+                <span class="tag-pill">🌾 Rural Business</span>
+              {% endif %}
+            </div>
+
+            <div class="problem-footer">
+              <span><strong>{{ prob.matches.count }}</strong> Mentors Matched</span>
+              <a href="{% url 'entrepreneur:problem_matches' prob.id %}" class="btn btn-sm btn-primary">
+                View Matches &rarr;
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="card text-center" style="padding: 3.5rem;">
+        <h3 style="margin-bottom: 0.5rem;">You haven't submitted any problems yet</h3>
+        <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 1.5rem auto;">
+          Instead of scrolling through hundreds of mentor profiles, tell us what you're struggling with and we'll recommend the right practitioners.
+        </p>
+        <a href="{% url 'entrepreneur:problem_create' %}" class="btn btn-primary">
+          Describe My Problem
+        </a>
+      </div>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}

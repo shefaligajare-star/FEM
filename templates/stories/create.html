@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Share a Field Story — FEM{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 3rem 1.5rem;">
+  <div style="margin-bottom: 2rem;">
+    <span class="badge badge-amber" style="margin-bottom: 0.35rem;">Candid Field Wisdom</span>
+    <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--secondary);">Share Your Experience</h1>
+    <p style="color: var(--text-secondary);">Help fellow founders navigate hurdles by documenting what happened, the lesson learned, and how you adapted.</p>
+  </div>
+
+  <div class="card" style="padding: 2.5rem;">
+    <form method="POST" action="{% url 'stories:story_create' %}">
+      {% csrf_token %}
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label class="form-label" for="story-type">Story Category *</label>
+          <select id="story-type" name="story_type" class="form-control" required>
+            <option value="FAILURE">Failure & Hard Lessons Learned</option>
+            <option value="SUCCESS">Breakthrough & Proven Success</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="story-context">Industry Context *</label>
+          <input type="text" id="story-context" name="business_context" class="form-control" placeholder="e.g. Rural Dairy Processing, Artisan Goods" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="story-title">Story Headline *</label>
+        <input type="text" id="story-title" name="title" class="form-control" placeholder="e.g. How uncollected retailer credit nearly destroyed our working capital" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="story-summary">Short Summary</label>
+        <input type="text" id="story-summary" name="summary" class="form-control" placeholder="A 1-2 sentence overview of the experience...">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="story-happened">1. What Happened? (The Bottleneck or Event) *</label>
+        <textarea id="story-happened" name="what_happened" class="form-control" rows="4" placeholder="Describe the operational challenge, market surprise, or bottleneck you experienced..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="story-learned">2. What I Learned *</label>
+        <textarea id="story-learned" name="what_i_learned" class="form-control" rows="4" placeholder="What key insight did this experience provide about unit economics, operations, or customer behavior?" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="story-diff">3. What I Would Do Differently</label>
+        <textarea id="story-diff" name="what_i_would_do_differently" class="form-control" rows="3" placeholder="If you had to do it again, what process, safeguard, or policy would you put in place?"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="story-takeaway">Single Most Important Takeaway *</label>
+        <input type="text" id="story-takeaway" name="key_takeaway" class="form-control" placeholder="e.g. Always mandate 50% advance for custom inventory orders" required>
+      </div>
+
+      <div class="flex justify-between items-center mt-6">
+        <a href="{% url 'stories:story_list' %}" class="btn btn-outline">Cancel</a>
+        <button type="submit" class="btn btn-primary btn-lg">Publish Field Story</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

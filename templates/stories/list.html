@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Field Stories: Success & Failure Lessons — FEM{% endblock %}
+
+{% block layout %}
+<div class="container" style="padding: 3rem 1.5rem;">
+  <div class="flex justify-between items-center mb-6" style="flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <span class="badge badge-amber" style="margin-bottom: 0.35rem;">Candid Reflection</span>
+      <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--secondary); margin: 0;">
+        Field Stories & Lessons Learned
+      </h1>
+      <p style="color: var(--text-secondary); margin: 0.25rem 0 0 0;">
+        We normalize setbacks as vital stepping stones. Read firsthand accounts of what went wrong, what was learned, and key takeaways.
+      </p>
+    </div>
+    <a href="{% url 'stories:story_create' %}" class="btn btn-primary btn-lg">
+      + Share Your Story
+    </a>
+  </div>
+
+  <!-- Type Filters -->
+  <div class="flex gap-3 mb-6" style="border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+    <a href="{% url 'stories:story_list' %}" class="btn btn-sm {% if not selected_type %}btn-primary{% else %}btn-outline{% endif %}">
+      All Stories
+    </a>
+    <a href="{% url 'stories:story_list' %}?type=FAILURE" class="btn btn-sm {% if selected_type == 'FAILURE' %}btn-primary{% else %}btn-outline{% endif %}">
+      💡 Failure & Lessons Learned
+    </a>
+    <a href="{% url 'stories:story_list' %}?type=SUCCESS" class="btn btn-sm {% if selected_type == 'SUCCESS' %}btn-primary{% else %}btn-outline{% endif %}">
+      🏆 Success & Breakthroughs
+    </a>
+  </div>
+
+  <!-- Stories Grid -->
+  {% if stories %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 1.75rem;">
+      {% for story in stories %}
+        <div class="card {% if story.story_type == 'FAILURE' %}story-failure{% else %}story-success{% endif %}" style="display: flex; flex-direction: column;">
+          <div class="flex justify-between items-center mb-2">
+            <span class="story-badge {% if story.story_type == 'FAILURE' %}story-badge-failure{% else %}story-badge-success{% endif %}">
+              {{ story.get_story_type_display.split|first }} Story
+            </span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">{{ story.business_context }}</span>
+          </div>
+
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.4rem;">
+            <a href="{% url 'stories:story_detail' story.id %}" style="color: var(--secondary); text-decoration: none;">
+              {{ story.title }}
+            </a>
+          </h3>
+
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+            By {{ story.author.get_full_name|default:story.author.username }} &bull; {{ story.created_at|date:"d M Y" }}
+          </div>
+
+          <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.25rem; flex-grow: 1;">
+            {{ story.summary|truncatewords:28 }}
+          </p>
+
+          <!-- Highlight Takeaway -->
+          <div style="background: var(--bg-app); border-left: 3px solid var(--primary); padding: 0.75rem 1rem; border-radius: var(--radius-sm); margin-bottom: 1.25rem;">
+            <strong style="font-size: 0.75rem; text-transform: uppercase; color: var(--primary);">Key Takeaway:</strong>
+            <div style="font-size: 0.875rem; font-style: italic; color: var(--text-primary); margin-top: 0.15rem;">
+              "{{ story.key_takeaway }}"
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center" style="border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+            <button type="button" class="like-story-btn btn btn-sm btn-outline {% if story.id in user_liked_ids %}liked{% endif %}" data-story-id="{{ story.id }}">
+              👏 <span class="like-count">{{ story.likes_count }}</span> Applaud
+            </button>
+            <a href="{% url 'stories:story_detail' story.id %}" class="btn btn-sm btn-outline">Read Full Story &rarr;</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card text-center" style="padding: 4rem 2rem;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">📖</div>
+      <h3>No field stories in this category</h3>
+      <p style="color: var(--text-secondary); max-width: 480px; margin: 0.5rem auto 1.5rem auto;">
+        Share the valuable lessons you gained navigating unexpected challenges.
+      </p>
+      <a href="{% url 'stories:story_create' %}" class="btn btn-primary">+ Share Your Story</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

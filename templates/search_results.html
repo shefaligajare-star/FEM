@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results for "{{ query }}" — FEM{% endblock %}
+
+{% block layout %}
+<div class="container" style="padding: 2.5rem 1.5rem 5rem 1.5rem;">
+  <div style="margin-bottom: 2rem;">
+    <h2>Search Results for <span style="color: var(--primary);">"{{ query }}"</span></h2>
+    <p style="font-size: 0.95rem; color: var(--text-muted);">Found {{ total_results }} results across the FEM ecosystem</p>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="filter-chips mb-6">
+    <a href="?q={{ query }}&cat=all" class="filter-chip {% if category == 'all' %}active{% endif %}">All ({{ total_results }})</a>
+    <a href="?q={{ query }}&cat=mentors" class="filter-chip {% if category == 'mentors' %}active{% endif %}">Mentors ({{ mentors|length }})</a>
+    <a href="?q={{ query }}&cat=entrepreneurs" class="filter-chip {% if category == 'entrepreneurs' %}active{% endif %}">Entrepreneurs ({{ entrepreneurs|length }})</a>
+    <a href="?q={{ query }}&cat=posts" class="filter-chip {% if category == 'posts' %}active{% endif %}">Community Posts ({{ posts|length }})</a>
+    <a href="?q={{ query }}&cat=stories" class="filter-chip {% if category == 'stories' %}active{% endif %}">Stories ({{ stories|length }})</a>
+    <a href="?q={{ query }}&cat=collabs" class="filter-chip {% if category == 'collabs' %}active{% endif %}">Collaborations ({{ collabs|length }})</a>
+  </div>
+
+  {% if total_results == 0 %}
+    <div class="card text-center" style="padding: 3rem;">
+      <h3 style="color: var(--text-muted); margin-bottom: 0.5rem;">No direct matches found</h3>
+      <p style="font-size: 0.95rem;">Try searching for broader keywords like "cash flow", "packaging", "retail", or "logistics".</p>
+    </div>
+  {% endif %}
+
+  <!-- Mentors Results -->
+  {% if mentors %}
+    <div style="margin-bottom: 2.5rem;">
+      <h3 class="mb-4">Mentors</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+        {% for mentor in mentors %}
+          <div class="card">
+            <div class="flex items-center gap-3 mb-3">
+              <img src="{{ mentor.user.avatar_url|default:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' }}" class="mentor-avatar" style="width: 48px; height: 48px;">
+              <div>
+                <h4 style="margin-bottom: 0.15rem;">{{ mentor.user.get_full_name }}</h4>
+                <div style="font-size: 0.8rem; color: var(--text-secondary);">{{ mentor.professional_title }}</div>
+              </div>
+            </div>
+            <p style="font-size: 0.875rem; margin-bottom: 1rem;">{{ mentor.biography|truncatewords:20 }}</p>
+            <a href="{% url 'entrepreneur:mentor_detail' mentor.id %}" class="btn btn-sm btn-outline-primary">View Mentor Profile</a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Community Posts Results -->
+  {% if posts %}
+    <div style="margin-bottom: 2.5rem;">
+      <h3 class="mb-4">Community Discussions</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+        {% for post in posts %}
+          <div class="card">
+            <span class="badge badge-teal mb-2">{{ post.get_post_type_display.split|first }}</span>
+            <h4 style="margin-bottom: 0.4rem;"><a href="{% url 'community:post_detail' post.id %}">{{ post.title }}</a></h4>
+            <p style="font-size: 0.875rem;">{{ post.content|truncatewords:22 }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Stories Results -->
+  {% if stories %}
+    <div style="margin-bottom: 2.5rem;">
+      <h3 class="mb-4">Field Stories</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+        {% for story in stories %}
+          <div class="card">
+            <span class="story-badge {% if story.story_type == 'FAILURE' %}story-badge-failure{% else %}story-badge-success{% endif %}">
+              {{ story.get_story_type_display.split|first }}
+            </span>
+            <h4 style="margin-bottom: 0.4rem;"><a href="{% url 'stories:story_detail' story.id %}">{{ story.title }}</a></h4>
+            <p style="font-size: 0.875rem;">{{ story.summary|truncatewords:20 }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Collaborations Results -->
+  {% if collabs %}
+    <div style="margin-bottom: 2.5rem;">
+      <h3 class="mb-4">Collaboration Opportunities</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+        {% for collab in collabs %}
+          <div class="card">
+            <h4 style="margin-bottom: 0.4rem;">{{ collab.title }}</h4>
+            <p style="font-size: 0.875rem; margin-bottom: 0.85rem;">{{ collab.description|truncatewords:22 }}</p>
+            <a href="{% url 'collaboration:board' %}" class="btn btn-sm btn-outline">View Collaboration</a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Saved Bookmarks — FEM{% endblock %}
+
+{% block layout %}
+<div class="app-layout">
+  {% include "entrepreneur/sidebar.html" %}
+
+  <main class="main-content">
+    <div class="section-header">
+      <div>
+        <h1>Saved Bookmarks</h1>
+        <p style="color: var(--text-muted);">Posts and field insights you saved for reference.</p>
+      </div>
+    </div>
+
+    {% if saved_posts %}
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+        {% for sp in saved_posts %}
+          <div class="card">
+            <span class="badge badge-teal mb-2">{{ sp.post.get_post_type_display.split|first }}</span>
+            <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;"><a href="{% url 'community:post_detail' sp.post.id %}">{{ sp.post.title }}</a></h3>
+            <p style="font-size: 0.875rem; margin-bottom: 1rem;">{{ sp.post.content|truncatewords:24 }}</p>
+            <div class="flex justify-between items-center" style="border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+              <span style="font-size: 0.775rem; color: var(--text-muted);">By {{ sp.post.author.display_name }}</span>
+              <a href="{% url 'community:save_toggle' sp.post.id %}" class="btn btn-sm btn-ghost" style="color: #DC2626;">Remove Bookmark</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="card text-center" style="padding: 3rem;">
+        <h3 style="margin-bottom: 0.5rem;">No saved bookmarks</h3>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">When you encounter insightful community posts or resources, click "Save" to keep them accessible here.</p>
+        <a href="{% url 'community:feed' %}" class="btn btn-outline">Explore Community Feed</a>
+      </div>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}

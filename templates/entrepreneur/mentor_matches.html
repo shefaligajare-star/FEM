@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}Mentor Recommendations for: {{ problem.title }} — FEM{% endblock %}
+
+{% block layout %}
+<div class="app-layout">
+  {% include "entrepreneur/sidebar.html" %}
+
+  <main class="main-content">
+    <!-- Problem Header Banner -->
+    <div class="card mb-6" style="background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%); border-left: 5px solid var(--primary);">
+      <div class="flex justify-between items-center mb-2">
+        <span class="badge badge-teal">Analyzed Problem</span>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Submitted {{ problem.created_at|date:"M d, Y" }}</span>
+      </div>
+      <h2 style="font-size: 1.5rem; margin-bottom: 0.65rem;">{{ problem.title }}</h2>
+      <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1rem;">
+        {{ problem.description }}
+      </p>
+
+      <div class="flex items-center gap-2" style="flex-wrap: wrap;">
+        <span class="tag-pill">Industry: {{ problem.industry }}</span>
+        <span class="tag-pill">Stage: {{ problem.business_stage }}</span>
+        <span class="tag-pill">Urgency: {{ problem.get_urgency_display.split|first }}</span>
+        {% if problem.is_rural_business %}
+          <span class="tag-pill">🌾 Rural Business Experience Required</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Recommendations Heading -->
+    <div class="section-header">
+      <div>
+        <h2>Top Matched Mentors</h2>
+        <p style="font-size: 0.95rem; color: var(--text-muted);">
+          Ranked by multi-factor problem similarity, verified rural track record, and past turnaround outcomes.
+        </p>
+      </div>
+    </div>
+
+    <!-- Matches Grid -->
+    <div style="display: flex; flex-direction: column; gap: 2rem;">
+      {% for match in matches %}
+        <div class="card" style="padding: 2rem;">
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+            
+            <!-- Left Column: Mentor Info & Explanation -->
+            <div>
+              <div class="mentor-card-header">
+                <img src="{{ match.mentor.user.avatar_url|default:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' }}" class="mentor-avatar" alt="{{ match.mentor.user.get_full_name }}">
+                <div class="mentor-info">
+                  <div class="mentor-name" style="font-size: 1.35rem;">
+                    {{ match.mentor.user.get_full_name }}
+                    {% if match.mentor.is_verified %}
+                      <span class="badge badge-verified">✓ Verified Mentor</span>
+                    {% endif %}
+                  </div>
+                  <div class="mentor-title" style="font-size: 0.95rem;">{{ match.mentor.professional_title }}</div>
+                </div>
+              </div>
+
+              <!-- Mentor Metrics -->
+              <div class="mentor-metrics-row mb-4">
+                <div class="metric-item">
+                  <span class="metric-val">⭐ {{ match.mentor.credits.entrepreneurs_mentored }}</span>
+                  <span class="metric-lbl">Entrepreneurs Mentored</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-val">⏱️ {{ match.mentor.credits.mentoring_hours }}h</span>
+                  <span class="metric-lbl">Mentoring Hours</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-val">🌾 {{ match.mentor.credits.rural_businesses_supported }}</span>
+                  <span class="metric-lbl">Rural Businesses</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-val">🏆 {{ match.mentor.credits.successful_outcomes }}</span>
+                  <span class="metric-lbl">Documented Outcomes</span>
+                </div>
+              </div>
+
+              <!-- Transparent "Why this mentor?" Explanation -->
+              <div class="explanation-card">
+                <div class="explanation-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                  <span>Why {{ match.mentor.user.get_full_name }}?</span>
+                </div>
+                <div style="font-size: 0.875rem; color: #134E4A; line-height: 1.5; white-space: pre-line;">
+                  {{ match.explanation }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: Match Score & Breakdown Meters -->
+            <div style="background: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="text-align: center; margin-bottom: 1.25rem;">
+                  <div style="font-size: 0.775rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">Composite Match Score</div>
+                  <div style="font-family: var(--font-heading); font-size: 2.75rem; font-weight: 800; color: var(--primary-hover); line-height: 1; margin: 0.35rem 0;">
+                    {{ match.match_score }}%
+                  </div>
+                  <div style="font-size: 0.775rem; color: var(--success); font-weight: 600;">High Problem-Experience Fit</div>
+                </div>
+
+                <!-- Breakdown Bars -->
+                <div class="breakdown-grid">
+                  <div class="breakdown-row">
+                    <span class="breakdown-lbl">Expertise Match (30%)</span>
+                    <div class="breakdown-bar-wrap">
+                      <div class="breakdown-bar-fill" style="width: {{ match.expertise_score }}%;"></div>
+                    </div>
+                    <span class="breakdown-pct">{{ match.expertise_score }}%</span>
+                  </div>
+
+                  <div class="breakdown-row">
+                    <span class="breakdown-lbl">Problem Similarity (30%)</span>
+                    <div class="breakdown-bar-wrap">
+                      <div class="breakdown-bar-fill" style="width: {{ match.problem_similarity_score }}%;"></div>
+                    </div>
+                    <span class="breakdown-pct">{{ match.problem_similarity_score }}%</span>
+                  </div>
+
+                  <div class="breakdown-row">
+                    <span class="breakdown-lbl">Industry Fit (15%)</span>
+                    <div class="breakdown-bar-wrap">
+                      <div class="breakdown-bar-fill" style="width: {{ match.industry_score }}%;"></div>
+                    </div>
+                    <span class="breakdown-pct">{{ match.industry_score }}%</span>
+                  </div>
+
+                  <div class="breakdown-row">
+                    <span class="breakdown-lbl">Business Stage (10%)</span>
+                    <div class="breakdown-bar-wrap">
+                      <div class="breakdown-bar-fill" style="width: {{ match.business_stage_score }}%;"></div>
+                    </div>
+                    <span class="breakdown-pct">{{ match.business_stage_score }}%</span>
+                  </div>
+
+                  <div class="breakdown-row">
+                    <span class="breakdown-lbl">Rural Track Record (10%)</span>
+                    <div class="breakdown-bar-wrap">
+                      <div class="breakdown-bar-fill" style="width: {{ match.rural_experience_score }}%;"></div>
+                    </div>
+                    <span class="breakdown-pct">{{ match.rural_experience_score }}%</span>
+                  </div>
+
+                  <div class="breakdown-row">
+                    <span class="breakdown-lbl">Proven Outcomes (5%)</span>
+                    <div class="breakdown-bar-wrap">
+                      <div class="breakdown-bar-fill" style="width: {{ match.outcomes_score }}%;"></div>
+                    </div>
+                    <span class="breakdown-pct">{{ match.outcomes_score }}%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                {% if match.mentor.id in requested_mentor_ids %}
+                  <button type="button" class="btn btn-secondary btn-full" disabled>
+                    ✓ Mentorship Requested
+                  </button>
+                {% else %}
+                  <button type="button" class="btn btn-primary btn-full open-request-modal-btn" data-mentor-id="{{ match.mentor.id }}" data-mentor-name="{{ match.mentor.user.get_full_name }}">
+                    Request Mentorship
+                  </button>
+                {% endif %}
+                <a href="{% url 'entrepreneur:mentor_detail' match.mentor.id %}" class="btn btn-outline btn-full btn-sm">
+                  View Full Mentor Profile
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Request Mentorship Modal -->
+    <div id="request-mentorship-modal" class="sync-modal-backdrop" role="dialog" aria-modal="true">
+      <div class="sync-modal" style="max-width: 600px;">
+        <div class="sync-modal-header">
+          <h3 class="sync-modal-title">Request Mentorship from <span id="modal-mentor-name"></span></h3>
+          <button type="button" class="alert-close" id="request-modal-close">&times;</button>
+        </div>
+
+        <form method="POST" id="modal-request-form" action="">
+          {% csrf_token %}
+          <input type="hidden" name="problem_id" value="{{ problem.id }}">
+
+          <div class="form-group">
+            <label class="form-label">Personal Note for the Mentor</label>
+            <textarea name="message" class="form-textarea" rows="4" placeholder="Hello, I reviewed your experience with similar challenges and would value a diagnostic conversation on our cash flow and contract terms..." required></textarea>
+            <div class="form-hint">Briefly explain why this mentor's specific experience is relevant to your bottleneck.</div>
+          </div>
+
+          <div class="flex justify-between items-center mt-4">
+            <button type="button" class="btn btn-outline" id="request-modal-cancel">Cancel</button>
+            <button type="submit" class="btn btn-primary">Send Mentorship Request</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  // Mentorship request modal handlers
+  const modal = document.getElementById('request-mentorship-modal');
+  const modalName = document.getElementById('modal-mentor-name');
+  const modalForm = document.getElementById('modal-request-form');
+
+  document.querySelectorAll('.open-request-modal-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mentorId = btn.dataset.mentorId;
+      const mentorName = btn.dataset.mentorName;
+      modalName.textContent = mentorName;
+      modalForm.action = `/entrepreneur/mentors/${mentorId}/request/`;
+      modal.classList.add('active');
+    });
+  });
+
+  const closeModal = () => modal.classList.remove('active');
+  document.getElementById('request-modal-close').addEventListener('click', closeModal);
+  document.getElementById('request-modal-cancel').addEventListener('click', closeModal);
+</script>
+{% endblock %}

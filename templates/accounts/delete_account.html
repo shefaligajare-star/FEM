@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Close Account — FEM{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 4rem 1.5rem;">
+  <div class="card" style="padding: 2.5rem; border-top: 5px solid #EF4444;">
+    <h1 style="font-size: 2rem; font-weight: 800; color: #DC2626; margin-bottom: 0.75rem;">
+      Confirm Account Deletion
+    </h1>
+    <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">
+      Warning: Deleting your account will permanently remove your profile, participation history, and preferences from Flourishing Entrepreneurs and Mentors. This action cannot be reversed.
+    </p>
+
+    <form method="POST" action="{% url 'accounts:delete_account' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label" for="confirm_delete">To confirm, please type <strong>DELETE</strong> in uppercase:</label>
+        <input type="text" id="confirm_delete" name="confirm_delete" class="form-control" placeholder="DELETE" required autocomplete="off">
+      </div>
+
+      <div class="flex justify-between items-center mt-6">
+        <a href="{% url 'accounts:settings' %}" class="btn btn-outline">Keep My Account</a>
+        <button type="submit" class="btn btn-primary" style="background: #DC2626; border-color: #DC2626;">Permanently Delete Account</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

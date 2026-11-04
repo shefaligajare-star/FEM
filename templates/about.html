@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About FEM — Flourishing Entrepreneurs and Mentors{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 4rem 1.5rem;">
+  <div style="text-align: center; margin-bottom: 3.5rem;">
+    <span class="badge badge-teal" style="margin-bottom: 0.5rem;">Our Mission</span>
+    <h1 style="font-size: 2.75rem; font-weight: 800; color: var(--secondary); margin-bottom: 1rem;">
+      Empowering Founders Through Problem-First Mentorship
+    </h1>
+    <p style="font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6; max-width: 680px; margin: 0 auto;">
+      Flourishing Entrepreneurs and Mentors (FEM) bridges the gap between grassroots entrepreneurs and seasoned mentors who have tackled the very challenges founders face today.
+    </p>
+  </div>
+
+  <div class="card mb-6" style="padding: 2.5rem;">
+    <h3 style="color: var(--secondary); margin-bottom: 1rem;">The FEM Philosophy</h3>
+    <p style="line-height: 1.7; color: var(--text-secondary); margin-bottom: 1.25rem;">
+      Traditional business advice platforms often suffer from high-altitude generalizations: generic business frameworks, transactional consultations, and inaccessible advisors. Regional and emerging entrepreneurs encounter concrete, high-stakes operational bottlenecks—such as receivables crunches, cold-chain breakdowns, pricing dilemmas, and rural distribution friction.
+    </p>
+    <p style="line-height: 1.7; color: var(--text-secondary);">
+      FEM was designed around three non-negotiable principles:
+    </p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+      <div style="background: var(--bg-app); padding: 1.25rem; border-radius: var(--radius-md); border-left: 3px solid var(--primary);">
+        <strong style="color: var(--primary); display: block; margin-bottom: 0.4rem;">1. Problem-First Alignment</strong>
+        <span style="font-size: 0.9rem; color: var(--text-secondary);">Mentors are matched directly to explicit problems in natural language, backed by proven outcomes.</span>
+      </div>
+      <div style="background: var(--bg-app); padding: 1.25rem; border-radius: var(--radius-md); border-left: 3px solid #F59E0B;">
+        <strong style="color: #D97706; display: block; margin-bottom: 0.4rem;">2. Transparent Contribution Credits</strong>
+        <span style="font-size: 0.9rem; color: var(--text-secondary);">Mentors earn verifiable impact credits derived exclusively from confirmed mentorship sessions and outcomes.</span>
+      </div>
+      <div style="background: var(--bg-app); padding: 1.25rem; border-radius: var(--radius-md); border-left: 3px solid #3B82F6;">
+        <strong style="color: #2563EB; display: block; margin-bottom: 0.4rem;">3. Offline-First Resilience</strong>
+        <span style="font-size: 0.9rem; color: var(--text-secondary);">A Progressive Web App with IndexedDB so entrepreneurs in remote regions can draft problems and collaborate without interruption.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-6" style="padding: 2.5rem;">
+    <h3 style="color: var(--secondary); margin-bottom: 1rem;">Normalizing Failure as a Stepping Stone</h3>
+    <p style="line-height: 1.7; color: var(--text-secondary); margin-bottom: 1rem;">
+      In entrepreneurship, glorifying only polished success stories deprives founders of vital lessons. FEM features our dedicated <strong>Field Stories</strong> repository where practitioners openly document operational setbacks: <em>What happened, what was learned, and what they would do differently.</em>
+    </p>
+    <div class="flex gap-4 mt-4">
+      <a href="{% url 'stories:story_list' %}" class="btn btn-primary">Read Field Stories</a>
+      <a href="{% url 'mentor_directory' %}" class="btn btn-outline">Explore Mentors</a>
+    </div>
+  </div>
+
+  <div style="text-align: center; padding: 2rem 0;">
+    <h3 style="margin-bottom: 0.75rem;">Ready to join our community?</h3>
+    <div class="flex justify-center gap-4 mt-4">
+      <a href="{% url 'signup' %}?role=entrepreneur" class="btn btn-primary btn-lg">Join as Entrepreneur</a>
+      <a href="{% url 'signup' %}?role=mentor" class="btn btn-outline btn-lg">Apply as Mentor</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

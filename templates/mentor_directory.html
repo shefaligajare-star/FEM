@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mentor Directory — Flourishing Entrepreneurs and Mentors{% endblock %}
+
+{% block layout %}
+<div class="container" style="padding: 3rem 1.5rem;">
+  <div style="text-align: center; margin-bottom: 2.5rem;">
+    <span class="badge badge-teal" style="margin-bottom: 0.5rem;">Verified Advisors</span>
+    <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--secondary); margin-bottom: 0.75rem;">
+      Mentor Directory
+    </h1>
+    <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 620px; margin: 0 auto;">
+      Connect with practitioners who possess hands-on experience navigating operational, financial, and market challenges.
+    </p>
+  </div>
+
+  <!-- Search & Filter Bar -->
+  <div class="card mb-6" style="padding: 1.5rem;">
+    <form method="GET" action="{% url 'mentor_directory' %}" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) auto; gap: 1rem; align-items: end;">
+      <div class="form-group" style="margin: 0;">
+        <label class="form-label" for="dir-q">Search Mentors</label>
+        <input type="text" id="dir-q" name="q" class="form-control" placeholder="Name, title, or keywords..." value="{{ query }}">
+      </div>
+
+      <div class="form-group" style="margin: 0;">
+        <label class="form-label" for="dir-exp">Filter by Expertise</label>
+        <select id="dir-exp" name="expertise" class="form-control">
+          <option value="">All Expertise Areas</option>
+          {% for exp in expertises %}
+            <option value="{{ exp.slug }}" {% if selected_expertise == exp.slug %}selected{% endif %}>{{ exp.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group" style="margin: 0;">
+        <label class="form-label" for="dir-ind">Industry</label>
+        <input type="text" id="dir-ind" name="industry" class="form-control" placeholder="e.g. Agri-Food, Retail..." value="{{ selected_industry }}">
+      </div>
+
+      <div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Filter</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Results Grid -->
+  {% if mentors %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.75rem;">
+      {% for mentor in mentors %}
+        <div class="card" style="display: flex; flex-direction: column;">
+          <div class="flex items-center gap-4 mb-4">
+            <img src="{{ mentor.user.avatar_url|default:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' }}" alt="{{ mentor.user.get_full_name }}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-light);">
+            <div>
+              <h3 style="font-size: 1.15rem; margin-bottom: 0.2rem; color: var(--secondary);">
+                {{ mentor.user.get_full_name|default:mentor.user.username }}
+              </h3>
+              <div style="font-size: 0.825rem; color: var(--text-muted); font-weight: 500;">
+                {{ mentor.professional_title }}
+              </div>
+            </div>
+          </div>
+
+          <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem; flex-grow: 1;">
+            {{ mentor.biography|truncatewords:28 }}
+          </p>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem;">
+            {% for exp in mentor.expertises.all %}
+              <span class="tag">{{ exp.name }}</span>
+            {% empty %}
+              <span class="tag">General Business</span>
+            {% endfor %}
+          </div>
+
+          <!-- Verified Credit Badges -->
+          <div style="background: var(--bg-app); padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.25rem; display: flex; justify-content: space-between;">
+            <span>⭐ <strong>{{ mentor.credits.credit_score|default:120 }}</strong> Mentor Credits</span>
+            <span>🤝 <strong>{{ mentor.credits.entrepreneurs_mentored|default:0 }}</strong> Mentored</span>
+          </div>
+
+          <div class="flex gap-2">
+            {% if user.is_authenticated and user.is_entrepreneur %}
+              <a href="{% url 'entrepreneur:mentor_detail' mentor.id %}" class="btn btn-primary" style="flex: 1; text-align: center;">View & Connect</a>
+            {% elif user.is_authenticated %}
+              <a href="{% url 'messaging:start_conversation' mentor.user.id %}" class="btn btn-outline" style="flex: 1; text-align: center;">Message</a>
+            {% else %}
+              <a href="{% url 'signup' %}?role=entrepreneur" class="btn btn-primary" style="flex: 1; text-align: center;">Connect via FEM</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card text-center" style="padding: 4rem 2rem;">
+      <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔍</div>
+      <h3>No mentors found matching your criteria</h3>
+      <p style="color: var(--text-secondary); max-width: 480px; margin: 0.5rem auto 1.5rem auto;">
+        Try broadening your search query or selecting a different expertise domain.
+      </p>
+      <a href="{% url 'mentor_directory' %}" class="btn btn-outline">Clear Filters</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

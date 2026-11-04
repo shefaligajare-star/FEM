@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Complete Mentoring Session — FEM{% endblock %}
+
+{% block layout %}
+<div class="dashboard-layout">
+  {% include "mentor/sidebar.html" %}
+
+  <main class="dashboard-content">
+    <div class="container container-narrow" style="padding: 1rem 0;">
+      <div class="mb-6">
+        <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">Complete Mentoring Session</h1>
+        <p style="color: var(--text-secondary); margin: 0;">Log diagnostic notes and record outcomes to update verified Mentor Credits.</p>
+      </div>
+
+      <div class="card mb-6" style="padding: 2rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; background: var(--bg-app); padding: 1.25rem; border-radius: var(--radius-sm);">
+          <div>
+            <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Entrepreneur</span>
+            <div style="font-weight: 700; color: var(--secondary);">{{ session.request.entrepreneur.get_full_name }}</div>
+          </div>
+          <div>
+            <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Business Problem</span>
+            <div style="font-weight: 600;">{{ session.request.problem.title }}</div>
+          </div>
+          <div>
+            <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Scheduled At</span>
+            <div>{{ session.scheduled_at|date:"d M Y @ H:i" }}</div>
+          </div>
+        </div>
+
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="form-label" for="mentor_notes">Key Diagnostic Takeaways & Recommendations *</label>
+            <textarea id="mentor_notes" name="mentor_notes" class="form-control" rows="6" placeholder="Summarize key action items, operational changes advised, and next milestones agreed with the founder..." required>{{ session.mentor_notes }}</textarea>
+          </div>
+
+          <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: #166534;">
+            <strong>Credits Update:</strong> Submitting this completed session records <strong>+1 mentoring hour</strong> and updates your verified Mentor Credits and rural support totals.
+          </div>
+
+          <div class="flex justify-between items-center">
+            <a href="{% url 'mentor:dashboard' %}" class="btn btn-outline">Cancel</a>
+            <button type="submit" class="btn btn-primary btn-lg">Record Completion & Award Credits</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

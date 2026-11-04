@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Offline Synchronization Audit — Admin Console{% endblock %}
+
+{% block layout %}
+<div class="dashboard-layout">
+  {% include "admin_dashboard/sidebar.html" %}
+
+  <main class="dashboard-content">
+    <div class="mb-6">
+      <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">Offline Sync Audit Log</h1>
+      <p style="color: var(--text-secondary); margin: 0;">Comprehensive audit trail of client-side IndexedDB batch sync events and idempotency verification.</p>
+    </div>
+
+    <!-- Summary Metrics -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+      <div class="card" style="padding: 1.5rem; border-top: 3px solid #10B981;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Successful Operations</span>
+        <div style="font-size: 2rem; font-weight: 800; color: #059669; margin: 0.25rem 0;">{{ total_synced }}</div>
+        <span style="font-size: 0.775rem; color: var(--text-muted);">Committed to database</span>
+      </div>
+
+      <div class="card" style="padding: 1.5rem; border-top: 3px solid #EF4444;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Failed Sync Attempts</span>
+        <div style="font-size: 2rem; font-weight: 800; color: #DC2626; margin: 0.25rem 0;">{{ total_failed }}</div>
+        <span style="font-size: 0.775rem; color: var(--text-muted);">Validation or schema errors</span>
+      </div>
+
+      <div class="card" style="padding: 1.5rem; border-top: 3px solid #F59E0B;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Conflicts Handled</span>
+        <div style="font-size: 2rem; font-weight: 800; color: #D97706; margin: 0.25rem 0;">{{ total_conflicts }}</div>
+        <span style="font-size: 0.775rem; color: var(--text-muted);">Reconciled via timestamp precedence</span>
+      </div>
+    </div>
+
+    <!-- Sync Events Table -->
+    <div class="card" style="padding: 1.5rem; overflow-x: auto;">
+      <h3 style="color: var(--secondary); margin-bottom: 1rem; font-size: 1.15rem;">Recent Synchronization Log (Last 50 Entries)</h3>
+      {% if sync_records %}
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+          <thead>
+            <tr style="text-align: left; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">
+              <th style="padding: 0.65rem 0.75rem;">Operation ID</th>
+              <th style="padding: 0.65rem 0.75rem;">User</th>
+              <th style="padding: 0.65rem 0.75rem;">Entity</th>
+              <th style="padding: 0.65rem 0.75rem;">Action</th>
+              <th style="padding: 0.65rem 0.75rem;">Status</th>
+              <th style="padding: 0.65rem 0.75rem;">Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for rec in sync_records %}
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 0.65rem 0.75rem; font-family: monospace; color: var(--text-secondary);">
+                  {{ rec.operation_id|truncatechars:18 }}
+                </td>
+                <td style="padding: 0.65rem 0.75rem; font-weight: 600;">{{ rec.user.username }}</td>
+                <td style="padding: 0.65rem 0.75rem;">{{ rec.entity_type }}</td>
+                <td style="padding: 0.65rem 0.75rem;">{{ rec.action }}</td>
+                <td style="padding: 0.65rem 0.75rem;">
+                  <span class="badge {% if rec.status == 'SYNCED' %}badge-teal{% elif rec.status == 'FAILED' %}badge-red{% else %}badge-amber{% endif %}">
+                    {{ rec.status }}
+                  </span>
+                </td>
+                <td style="padding: 0.65rem 0.75rem; color: var(--text-muted);">{{ rec.server_timestamp|date:"Y-m-d H:i:s" }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">No offline synchronization events recorded yet.</p>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}

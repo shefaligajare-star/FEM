@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ story.title }} — Field Stories{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 3rem 1.5rem;">
+  <div class="mb-4">
+    <a href="{% url 'stories:story_list' %}" style="font-size: 0.875rem; color: var(--text-muted); text-decoration: none;">
+      &larr; Back to Field Stories
+    </a>
+  </div>
+
+  <div class="card mb-6" style="padding: 2.5rem;">
+    <div class="flex justify-between items-center mb-3">
+      <span class="story-badge {% if story.story_type == 'FAILURE' %}story-badge-failure{% else %}story-badge-success{% endif %}">
+        {{ story.get_story_type_display }}
+      </span>
+      <span style="font-size: 0.85rem; color: var(--text-muted);">{{ story.business_context }}</span>
+    </div>
+
+    <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--secondary); margin-bottom: 0.75rem; line-height: 1.25;">
+      {{ story.title }}
+    </h1>
+
+    <div class="flex items-center gap-3 mb-6" style="border-bottom: 1px solid var(--border-color); padding-bottom: 1.25rem;">
+      <img src="{{ story.author.avatar_url|default:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' }}" alt="{{ story.author.display_name }}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;">
+      <div>
+        <strong style="color: var(--secondary);">{{ story.author.get_full_name|default:story.author.username }}</strong>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">
+          {{ story.author.get_role_display }} &bull; Published on {{ story.created_at|date:"d F Y" }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Structured 3-Phase Breakdown -->
+    <div style="display: flex; flex-direction: column; gap: 2rem;">
+      <div>
+        <h3 style="color: var(--secondary); margin-bottom: 0.5rem; font-size: 1.25rem;">1. What Happened</h3>
+        <p style="color: var(--text-secondary); line-height: 1.7; font-size: 1rem; margin: 0; white-space: pre-line;">
+          {{ story.what_happened }}
+        </p>
+      </div>
+
+      <div>
+        <h3 style="color: var(--secondary); margin-bottom: 0.5rem; font-size: 1.25rem;">2. What I Learned</h3>
+        <p style="color: var(--text-secondary); line-height: 1.7; font-size: 1rem; margin: 0; white-space: pre-line;">
+          {{ story.what_i_learned }}
+        </p>
+      </div>
+
+      {% if story.what_i_would_do_differently %}
+        <div>
+          <h3 style="color: var(--secondary); margin-bottom: 0.5rem; font-size: 1.25rem;">3. What I Would Do Differently</h3>
+          <p style="color: var(--text-secondary); line-height: 1.7; font-size: 1rem; margin: 0; white-space: pre-line;">
+            {{ story.what_i_would_do_differently }}
+          </p>
+        </div>
+      {% endif %}
+
+      <!-- Core Takeaway Callout -->
+      <div style="background: var(--bg-app); border-left: 4px solid var(--primary); padding: 1.25rem 1.5rem; border-radius: var(--radius-sm);">
+        <strong style="font-size: 0.8rem; text-transform: uppercase; color: var(--primary); letter-spacing: 0.05em;">Key Takeaway:</strong>
+        <p style="font-size: 1.05rem; font-style: italic; color: var(--text-primary); margin: 0.35rem 0 0 0; line-height: 1.5;">
+          "{{ story.key_takeaway }}"
+        </p>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-center mt-6" style="border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+      <button type="button" class="like-story-btn btn btn-outline {% if has_liked %}liked{% endif %}" data-story-id="{{ story.id }}">
+        👏 <span class="like-count">{{ story.likes_count }}</span> Applaud
+      </button>
+
+      <a href="{% url 'messaging:start_conversation' story.author.id %}" class="btn btn-outline">
+        Message Author
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

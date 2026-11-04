@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit Profile — FEM{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 3rem 1.5rem;">
+  <div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--secondary);">Edit Profile</h1>
+    <p style="color: var(--text-secondary);">Update your personal information and biography across the platform.</p>
+  </div>
+
+  <div class="card" style="padding: 2.5rem;">
+    <form method="POST" action="{% url 'accounts:profile_edit' %}">
+      {% csrf_token %}
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label class="form-label" for="edit-fname">First Name</label>
+          <input type="text" id="edit-fname" name="first_name" class="form-control" value="{{ user_obj.first_name }}">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="edit-lname">Last Name</label>
+          <input type="text" id="edit-lname" name="last_name" class="form-control" value="{{ user_obj.last_name }}">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label class="form-label" for="edit-email">Email Address</label>
+          <input type="email" id="edit-email" name="email" class="form-control" value="{{ user_obj.email }}" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="edit-phone">Phone Number</label>
+          <input type="text" id="edit-phone" name="phone" class="form-control" value="{{ user_obj.phone|default:'' }}">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label class="form-label" for="edit-city">City / District</label>
+          <input type="text" id="edit-city" name="city" class="form-control" value="{{ user_obj.city|default:'' }}" placeholder="e.g. Pune, Kolhapur">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="edit-region">State / Region</label>
+          <input type="text" id="edit-region" name="region" class="form-control" value="{{ user_obj.region|default:'' }}" placeholder="e.g. Maharashtra">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="edit-avatar">Avatar Image URL</label>
+        <input type="url" id="edit-avatar" name="avatar_url" class="form-control" value="{{ user_obj.avatar_url|default:'' }}" placeholder="https://...">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="edit-bio">Personal Biography</label>
+        <textarea id="edit-bio" name="bio" class="form-control" rows="4" placeholder="Share a brief overview of your background...">{{ user_obj.bio }}</textarea>
+      </div>
+
+      <div class="flex justify-between items-center mt-6">
+        <a href="{% url 'accounts:profile' %}" class="btn btn-outline">Cancel</a>
+        <button type="submit" class="btn btn-primary btn-lg">Save Profile</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

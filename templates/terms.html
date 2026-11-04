@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Terms of Service — Flourishing Entrepreneurs and Mentors{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 4rem 1.5rem;">
+  <div style="margin-bottom: 2.5rem;">
+    <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--secondary); margin-bottom: 0.5rem;">
+      Terms of Service
+    </h1>
+    <span style="font-size: 0.875rem; color: var(--text-muted);">Last Updated: October 2026</span>
+  </div>
+
+  <div class="card" style="padding: 2.5rem; line-height: 1.7; color: var(--text-secondary);">
+    <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">1. Acceptance of Terms</h3>
+    <p style="margin-bottom: 1.5rem;">
+      By accessing or using Flourishing Entrepreneurs and Mentors (FEM), you agree to be bound by these Terms of Service. If you do not agree, please do not use the platform.
+    </p>
+
+    <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">2. User Conduct & Authenticity</h3>
+    <p style="margin-bottom: 1.5rem;">
+      FEM is a community founded on authenticity and mutual trust. Users agree to provide truthful business information, genuine mentor credentials, and respectful communication in all community discussions, collaboration requests, and mentoring sessions.
+    </p>
+
+    <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">3. Mentorship Advisory Disclaimer</h3>
+    <p style="margin-bottom: 1.5rem;">
+      Mentorship advice shared on FEM reflects the personal experience of independent mentors and does not constitute formal legal, accounting, or financial warranties. Founders remain responsible for their individual business decisions.
+    </p>
+
+    <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">4. Content Moderation</h3>
+    <p style="margin-bottom: 1.5rem;">
+      FEM reserves the right to moderate, flag, or remove user-generated content that violates community standards, promotes spam, or infringes on intellectual property.
+    </p>
+
+    <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">5. Account Termination</h3>
+    <p>
+      Users may delete their account at any time through <a href="{% url 'accounts:settings' %}" style="color: var(--primary);">Account Settings</a>.
+    </p>
+  </div>
+</div>
+{% endblock %}

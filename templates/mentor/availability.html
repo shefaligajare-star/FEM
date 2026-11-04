@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mentoring Availability — FEM{% endblock %}
+
+{% block layout %}
+<div class="dashboard-layout">
+  {% include "mentor/sidebar.html" %}
+
+  <main class="dashboard-content">
+    <div class="mb-6">
+      <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">Weekly Mentoring Availability</h1>
+      <p style="color: var(--text-secondary); margin: 0;">Define recurring time slots when founders can book diagnostic mentoring sessions with you.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+      
+      <!-- Existing Slots List -->
+      <div class="card" style="padding: 2rem;">
+        <h3 style="color: var(--secondary); margin-bottom: 1rem;">Active Availability Slots</h3>
+        {% if slots %}
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            {% for slot in slots %}
+              <div style="background: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <strong style="color: var(--primary);">{{ slot.get_day_of_week_display }}</strong>
+                  <div style="font-size: 0.9rem; font-weight: 600; color: var(--secondary); margin-top: 0.2rem;">
+                    {{ slot.start_time|time:"h:i A" }} – {{ slot.end_time|time:"h:i A" }}
+                  </div>
+                  <div style="font-size: 0.775rem; color: var(--text-muted);">
+                    {{ slot.slot_type }}
+                  </div>
+                </div>
+
+                <form method="POST" action="{% url 'mentor:availability' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="delete">
+                  <input type="hidden" name="slot_id" value="{{ slot.id }}">
+                  <button type="submit" class="btn btn-sm btn-outline" style="color: #DC2626; border-color: #FCA5A5;">Remove</button>
+                </form>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p style="color: var(--text-muted); font-size: 0.9rem;">
+            No availability slots added yet. Add your preferred diagnostic hours on the right.
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- Add Slot Form -->
+      <div class="card" style="padding: 2rem;">
+        <h3 style="color: var(--secondary); margin-bottom: 1rem;">Add New Availability Slot</h3>
+        <form method="POST" action="{% url 'mentor:availability' %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add">
+
+          <div class="form-group">
+            <label class="form-label" for="day_of_week">Day of the Week *</label>
+            <select id="day_of_week" name="day_of_week" class="form-control" required>
+              <option value="MON">Monday</option>
+              <option value="TUE">Tuesday</option>
+              <option value="WED">Wednesday</option>
+              <option value="THU">Thursday</option>
+              <option value="FRI">Friday</option>
+              <option value="SAT">Saturday</option>
+              <option value="SUN">Sunday</option>
+            </select>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="start_time">Start Time *</label>
+              <input type="time" id="start_time" name="start_time" class="form-control" value="10:00" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="end_time">End Time *</label>
+              <input type="time" id="end_time" name="end_time" class="form-control" value="11:30" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="slot_type">Session Diagnostic Format</label>
+            <input type="text" id="slot_type" name="slot_type" class="form-control" value="1-on-1 Problem Diagnostic (45 min)">
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg mt-4">Save Availability Slot</button>
+        </form>
+      </div>
+
+    </div>
+  </main>
+</div>
+{% endblock %}

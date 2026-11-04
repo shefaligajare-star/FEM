@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Entrepreneur Profile — FEM{% endblock %}
+
+{% block layout %}
+<div class="app-layout">
+  {% include "entrepreneur/sidebar.html" %}
+
+  <main class="main-content">
+    <div class="container container-narrow" style="max-width: 760px;">
+      <div class="section-header">
+        <div>
+          <h1>Entrepreneur Profile</h1>
+          <p style="color: var(--text-muted);">Keep your venture information updated to receive more precise mentor recommendations.</p>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 2.25rem;">
+        <form method="POST" action="{% url 'entrepreneur:profile' %}">
+          {% csrf_token %}
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name</label>
+              <input type="text" name="first_name" class="form-input" value="{{ user.first_name }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name</label>
+              <input type="text" name="last_name" class="form-input" value="{{ user.last_name }}">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Business / Venture Name</label>
+            <input type="text" name="business_name" class="form-input" value="{{ profile.business_name }}" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Primary Industry</label>
+              <input type="text" name="industry" class="form-input" value="{{ profile.industry }}" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Business Stage</label>
+              <select name="business_stage" class="form-select">
+                <option value="IDEA" {% if profile.business_stage == 'IDEA' %}selected{% endif %}>Idea & Validation</option>
+                <option value="EARLY" {% if profile.business_stage == 'EARLY' %}selected{% endif %}>Early Stage / Initial Sales</option>
+                <option value="GROWTH" {% if profile.business_stage == 'GROWTH' %}selected{% endif %}>Growth & Expansion</option>
+                <option value="SCALING" {% if profile.business_stage == 'SCALING' %}selected{% endif %}>Scaling Operations</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">City / Town</label>
+              <input type="text" name="city" class="form-input" value="{{ user.city }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Region / State</label>
+              <input type="text" name="region" class="form-input" value="{{ user.region }}">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Operating Location Details</label>
+            <input type="text" name="location" class="form-input" value="{{ profile.location }}">
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" name="is_rural_business" {% if profile.is_rural_business %}checked{% endif %}>
+              <span>This is a rural, agricultural, or regional business</span>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Business Description & Value Proposition</label>
+            <textarea name="description" class="form-textarea" rows="4">{{ profile.description }}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Core Capabilities & Skills</label>
+            <input type="text" name="skills" class="form-input" value="{{ profile.skills }}">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Collaboration Interests</label>
+            <input type="text" name="collaboration_interests" class="form-input" value="{{ profile.collaboration_interests }}" placeholder="e.g. Sustainable packaging, cold-chain transport, distributor partners">
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg">
+            Save Profile Changes
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}What problem are you facing? — FEM{% endblock %}
+
+{% block layout %}
+<div class="app-layout">
+  {% include "entrepreneur/sidebar.html" %}
+
+  <main class="main-content">
+    <div class="container container-narrow" style="max-width: 780px;">
+      <!-- Main Heading & Microcopy -->
+      <div class="problem-box-header">
+        <a href="{% url 'entrepreneur:problem_list' %}" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: inline-flex; align-items: center; gap: 0.4rem; margin-bottom: 0.75rem;">
+          &larr; Back to My Problems
+        </a>
+        <h1>What problem are you facing?</h1>
+        <p>Tell us what you're struggling with. Describe the bottleneck in your own words, and our matching engine will analyze who has already solved it.</p>
+      </div>
+
+      <div class="card" style="padding: 2.5rem;">
+        <form method="POST" action="{% url 'entrepreneur:problem_create' %}" id="problem-create-form">
+          {% csrf_token %}
+
+          <!-- Core Problem Title -->
+          <div class="form-group">
+            <label class="form-label" for="id_title">Problem Summary / Bottleneck Title</label>
+            <input type="text" name="title" id="id_title" class="form-input" placeholder="e.g. Severe cash flow deficit caused by 60-day distributor payment terms" required>
+            <div class="form-hint">A concise summary of the primary hurdle holding back your business.</div>
+          </div>
+
+          <!-- Large Natural Language Text Area -->
+          <div class="form-group">
+            <label class="form-label" for="id_description">Describe Your Problem in Detail</label>
+            <textarea name="description" id="id_description" class="form-textarea form-textarea-large" placeholder="Tell us what you're struggling with. For example:
+• What is happening right now?
+• What have you tried so far?
+• What specific decision or fix do you need guidance on?" required></textarea>
+          </div>
+
+          <div class="form-row">
+            <!-- Category -->
+            <div class="form-group">
+              <label class="form-label" for="id_category">Problem Category <span class="form-label-optional">(Optional)</span></label>
+              <select name="category" id="id_category" class="form-select">
+                <option value="">Select general category...</option>
+                {% for cat in categories %}
+                  <option value="{{ cat.id }}">{{ cat.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- Urgency -->
+            <div class="form-group">
+              <label class="form-label" for="id_urgency">Urgency Level</label>
+              <select name="urgency" id="id_urgency" class="form-select">
+                <option value="HIGH" selected>High — Impeding daily operations (Next 2 weeks)</option>
+                <option value="CRITICAL">Critical — Immediate liquidity/production crisis</option>
+                <option value="MEDIUM">Medium — Need resolution within 1-2 months</option>
+                <option value="LOW">Low — Strategic exploration for future scale</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Context Details (Pre-filled from Entrepreneur Profile) -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="id_industry">Industry</label>
+              <input type="text" name="industry" id="id_industry" class="form-input" value="{{ profile.industry|default:'Agri-Food & Rural Processing' }}">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="id_business_stage">Business Stage</label>
+              <select name="business_stage" id="id_business_stage" class="form-select">
+                <option value="Early Stage / Initial Sales" selected>Early Stage / Initial Sales</option>
+                <option value="Idea & Validation">Idea & Validation</option>
+                <option value="Growth & Expansion">Growth & Expansion</option>
+                <option value="Scaling Operations">Scaling Operations</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="id_desired_support">Desired Type of Support</label>
+              <input type="text" name="desired_support" id="id_desired_support" class="form-input" placeholder="e.g. 1-on-1 Cash Flow Audit, Contract Clause Review" value="1-on-1 Strategy & Troubleshooting">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="id_location">Location / Region</label>
+              <input type="text" name="location" id="id_location" class="form-input" value="{{ profile.location|default:user.city }}">
+            </div>
+          </div>
+
+          <div class="form-group mb-6">
+            <label class="checkbox-label">
+              <input type="checkbox" name="is_rural_business" {% if profile.is_rural_business %}checked{% endif %}>
+              <span>This is a rural, semi-urban, or regional enterprise (prioritize mentors with rural business experience)</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full" style="padding: 0.9rem; font-size: 1.05rem;">
+            Analyze Problem & Recommend Mentors &rarr;
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

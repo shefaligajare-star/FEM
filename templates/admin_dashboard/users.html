@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}User Management — Admin Console{% endblock %}
+
+{% block layout %}
+<div class="dashboard-layout">
+  {% include "admin_dashboard/sidebar.html" %}
+
+  <main class="dashboard-content">
+    <div class="flex justify-between items-center mb-6" style="flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">User Management</h1>
+        <p style="color: var(--text-secondary); margin: 0;">View, filter, and inspect registered users across the platform.</p>
+      </div>
+
+      <!-- Role Filter Pills -->
+      <div class="flex gap-2">
+        <a href="{% url 'admin_dashboard:users' %}" class="btn btn-sm {% if not selected_role %}btn-primary{% else %}btn-outline{% endif %}">All</a>
+        <a href="{% url 'admin_dashboard:users' %}?role=ENTREPRENEUR" class="btn btn-sm {% if selected_role == 'ENTREPRENEUR' %}btn-primary{% else %}btn-outline{% endif %}">Entrepreneurs</a>
+        <a href="{% url 'admin_dashboard:users' %}?role=MENTOR" class="btn btn-sm {% if selected_role == 'MENTOR' %}btn-primary{% else %}btn-outline{% endif %}">Mentors</a>
+        <a href="{% url 'admin_dashboard:users' %}?role=ADMIN" class="btn btn-sm {% if selected_role == 'ADMIN' %}btn-primary{% else %}btn-outline{% endif %}">Admins</a>
+      </div>
+    </div>
+
+    <div class="card" style="padding: 1.5rem; overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+        <thead>
+          <tr style="text-align: left; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">
+            <th style="padding: 0.75rem 1rem;">User</th>
+            <th style="padding: 0.75rem 1rem;">Email</th>
+            <th style="padding: 0.75rem 1rem;">Role</th>
+            <th style="padding: 0.75rem 1rem;">Location</th>
+            <th style="padding: 0.75rem 1rem;">Joined Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.75rem 1rem;">
+                <div class="flex items-center gap-3">
+                  <img src="{{ u.avatar_url|default:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' }}" alt="{{ u.username }}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                  <div>
+                    <strong style="color: var(--secondary);">{{ u.get_full_name|default:u.username }}</strong>
+                    <div style="font-size: 0.775rem; color: var(--text-muted);">@{{ u.username }}</div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding: 0.75rem 1rem; color: var(--text-secondary);">{{ u.email }}</td>
+              <td style="padding: 0.75rem 1rem;">
+                <span class="badge {% if u.is_mentor %}badge-teal{% elif u.is_admin_user %}badge-amber{% else %}badge-blue{% endif %}">
+                  {{ u.get_role_display }}
+                </span>
+              </td>
+              <td style="padding: 0.75rem 1rem; color: var(--text-muted);">
+                {{ u.city|default:"Regional" }}{% if u.region %}, {{ u.region }}{% endif %}
+              </td>
+              <td style="padding: 0.75rem 1rem; color: var(--text-muted);">
+                {{ u.date_joined|date:"d M Y" }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+{% endblock %}

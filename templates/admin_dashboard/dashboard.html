@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Administrator Console — FEM{% endblock %}
+
+{% block layout %}
+<div class="dashboard-layout">
+  {% include "admin_dashboard/sidebar.html" %}
+
+  <main class="dashboard-content">
+    <div class="mb-6">
+      <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">System Administrator Console</h1>
+      <p style="color: var(--text-secondary); margin: 0;">System oversight, mentor credentials validation, user governance, and offline sync auditing.</p>
+    </div>
+
+    <!-- Platform Stats Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+      <div class="card" style="padding: 1.25rem; border-top: 3px solid var(--primary);">
+        <span style="font-size: 0.775rem; color: var(--text-muted); text-transform: uppercase;">Total Users</span>
+        <div style="font-size: 1.85rem; font-weight: 800; color: var(--secondary); margin: 0.2rem 0;">{{ total_users }}</div>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">{{ entrepreneurs_count }} founders, {{ mentors_count }} mentors</span>
+      </div>
+
+      <div class="card" style="padding: 1.25rem; border-top: 3px solid #3B82F6;">
+        <span style="font-size: 0.775rem; color: var(--text-muted); text-transform: uppercase;">Problems Filed</span>
+        <div style="font-size: 1.85rem; font-weight: 800; color: var(--secondary); margin: 0.2rem 0;">{{ problems_count }}</div>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">{{ requests_count }} total requests</span>
+      </div>
+
+      <div class="card" style="padding: 1.25rem; border-top: 3px solid #10B981;">
+        <span style="font-size: 0.775rem; color: var(--text-muted); text-transform: uppercase;">Match Success Rate</span>
+        <div style="font-size: 1.85rem; font-weight: 800; color: #059669; margin: 0.2rem 0;">{{ match_rate }}%</div>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">{{ accepted_requests }} sessions scheduled</span>
+      </div>
+
+      <div class="card" style="padding: 1.25rem; border-top: 3px solid #F59E0B;">
+        <span style="font-size: 0.775rem; color: var(--text-muted); text-transform: uppercase;">Field Stories</span>
+        <div style="font-size: 1.85rem; font-weight: 800; color: #D97706; margin: 0.2rem 0;">{{ stories_count }}</div>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">{{ collabs_count }} collaborations</span>
+      </div>
+
+      <div class="card" style="padding: 1.25rem; border-top: 3px solid #8B5CF6;">
+        <span style="font-size: 0.775rem; color: var(--text-muted); text-transform: uppercase;">Offline Operations</span>
+        <div style="font-size: 1.85rem; font-weight: 800; color: #7C3AED; margin: 0.2rem 0;">{{ sync_records_count }}</div>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">Synchronized safely</span>
+      </div>
+    </div>
+
+    <!-- Quick Action Sections -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+      <!-- Top Problem Categories -->
+      <div class="card" style="padding: 1.75rem;">
+        <h3 style="color: var(--secondary); margin-bottom: 1rem; font-size: 1.1rem;">Top Business Challenge Sectors</h3>
+        {% if top_categories %}
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            {% for cat in top_categories %}
+              <div class="flex justify-between items-center" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+                <span style="font-weight: 600; font-size: 0.9rem;">{{ cat.name }}</span>
+                <span class="badge badge-teal">{{ cat.prob_count }} challenges</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p style="color: var(--text-muted); font-size: 0.85rem;">No problem records yet.</p>
+        {% endif %}
+      </div>
+
+      <!-- Flagged Moderation Items -->
+      <div class="card" style="padding: 1.75rem;">
+        <div class="flex justify-between items-center mb-3">
+          <h3 style="color: var(--secondary); margin: 0; font-size: 1.1rem;">Flagged Posts Awaiting Review</h3>
+          <a href="{% url 'admin_dashboard:reports' %}" style="font-size: 0.85rem; color: var(--primary);">View Moderation &rarr;</a>
+        </div>
+        {% if reported_posts %}
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            {% for p in reported_posts %}
+              <div style="background: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.75rem 1rem;">
+                <div style="font-weight: 600; font-size: 0.9rem; color: #DC2626;">{{ p.title }}</div>
+                <div style="font-size: 0.775rem; color: var(--text-muted); margin-top: 0.2rem;">By {{ p.author.username }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div style="text-align: center; color: var(--text-muted); padding: 2rem 0; font-size: 0.9rem;">
+            ✅ Zero flagged posts. Content clean.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Recent Offline Sync Audits -->
+    <div class="card" style="padding: 1.75rem;">
+      <div class="flex justify-between items-center mb-3">
+        <h3 style="color: var(--secondary); margin: 0; font-size: 1.1rem;">Recent Offline Synchronization Events</h3>
+        <a href="{% url 'admin_dashboard:sync_stats' %}" style="font-size: 0.85rem; color: var(--primary);">Audit Log &rarr;</a>
+      </div>
+      {% if recent_syncs %}
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+            <thead>
+              <tr style="text-align: left; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">
+                <th style="padding: 0.5rem 0.75rem;">User</th>
+                <th style="padding: 0.5rem 0.75rem;">Entity</th>
+                <th style="padding: 0.5rem 0.75rem;">Action</th>
+                <th style="padding: 0.5rem 0.75rem;">Status</th>
+                <th style="padding: 0.5rem 0.75rem;">Timestamp</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for rec in recent_syncs %}
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.5rem 0.75rem; font-weight: 600;">{{ rec.user.username }}</td>
+                  <td style="padding: 0.5rem 0.75rem;">{{ rec.entity_type }}</td>
+                  <td style="padding: 0.5rem 0.75rem;">{{ rec.action }}</td>
+                  <td style="padding: 0.5rem 0.75rem;">
+                    <span class="badge {% if rec.status == 'SYNCED' %}badge-teal{% elif rec.status == 'FAILED' %}badge-red{% else %}badge-amber{% endif %}">
+                      {{ rec.status }}
+                    </span>
+                  </td>
+                  <td style="padding: 0.5rem 0.75rem; color: var(--text-muted);">{{ rec.server_timestamp|date:"d M H:i:s" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">No offline synchronization records logged yet.</p>
+      {% endif %}
+    </div>
+
+  </main>
+</div>
+{% endblock %}

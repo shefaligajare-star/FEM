@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Post Collaboration Opportunity — FEM{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 3rem 1.5rem;">
+  <div style="margin-bottom: 2rem;">
+    <span class="badge badge-teal" style="margin-bottom: 0.35rem;">Peer Partnership</span>
+    <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--secondary);">Post a Collaboration Opportunity</h1>
+    <p style="color: var(--text-secondary);">Connect with fellow entrepreneurs to combine purchasing power, share facilities, or co-market.</p>
+  </div>
+
+  <div class="card" style="padding: 2.5rem;">
+    <form method="POST" action="{% url 'collaboration:create' %}" id="collaboration-form">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label class="form-label" for="collab-title">Collaboration Headline *</label>
+        <input type="text" id="collab-title" name="title" class="form-control" placeholder="e.g. Seeking bulk glass packaging partner for seasonal organic preserves" required>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label class="form-label" for="collab-type">Partnership Type *</label>
+          <select id="collab-type" name="collaboration_type" class="form-control" required>
+            {% for val, label in collab_types %}
+              <option value="{{ val }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="collab-ind">Primary Industry</label>
+          <input type="text" id="collab-ind" name="industry" class="form-control" value="Food & Agriculture Production" placeholder="e.g. Agri-Food, Textiles...">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label class="form-label" for="collab-loc">Geographic Location / Scope</label>
+          <input type="text" id="collab-loc" name="location" class="form-control" value="{{ user.city|default:'Regional' }}" placeholder="e.g. Pune & Western Maharashtra">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="collab-tags">Keywords / Tags (Space Separated)</label>
+          <input type="text" id="collab-tags" name="tags" class="form-control" placeholder="packaging transport logistics cold-storage">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="collab-desc">Detailed Description of Partnership Opportunity *</label>
+        <textarea id="collab-desc" name="description" class="form-control" rows="6" placeholder="Explain what your venture brings, what partner capability you are looking for, expected volumes, and how both founders benefit..." required></textarea>
+      </div>
+
+      <div class="flex justify-between items-center mt-6">
+        <a href="{% url 'collaboration:board' %}" class="btn btn-outline">Cancel</a>
+        <button type="submit" class="btn btn-primary btn-lg">Publish Opportunity</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}{{ mentor.user.get_full_name }} — FEM Mentor Profile{% endblock %}
+
+{% block layout %}
+<div class="app-layout">
+  {% include "entrepreneur/sidebar.html" %}
+
+  <main class="main-content">
+    <a href="{% url 'entrepreneur:dashboard' %}" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: inline-flex; align-items: center; gap: 0.4rem; margin-bottom: 1.25rem;">
+      &larr; Back to Dashboard
+    </a>
+
+    <!-- Profile Hero Card -->
+    <div class="card mb-6" style="padding: 2.25rem;">
+      <div class="flex items-center gap-6" style="flex-wrap: wrap;">
+        <img src="{{ mentor.user.avatar_url|default:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80' }}" class="mentor-avatar" style="width: 90px; height: 90px;" alt="{{ mentor.user.get_full_name }}">
+        <div style="flex: 1;">
+          <div class="flex items-center gap-3">
+            <h1 style="font-size: 1.85rem; margin-bottom: 0.2rem;">{{ mentor.user.get_full_name }}</h1>
+            {% if mentor.is_verified %}
+              <span class="badge badge-verified">✓ Verified Mentor</span>
+            {% endif %}
+          </div>
+          <div style="font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 0.5rem;">{{ mentor.professional_title }}</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">
+            📍 {{ mentor.user.city }}, {{ mentor.user.region }} &bull; {{ mentor.years_of_experience }} Years Practical Experience
+          </div>
+        </div>
+
+        {% if not existing_request %}
+          <a href="#request-section" class="btn btn-primary btn-lg">
+            Request Mentorship
+          </a>
+        {% else %}
+          <div class="badge badge-emerald" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+            Status: {{ existing_request.get_status_display }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Mentor Credits Impact Scorecard -->
+    <div class="mentor-credit-scorecard mb-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <span class="credit-badge-large">🏆 Mentor Credits Score: {{ mentor.credits.credit_score }} pts</span>
+          <h2 style="color: white; font-size: 1.5rem; margin-bottom: 0.25rem;">Documented Community Impact</h2>
+          <p style="color: #94A3B8; font-size: 0.9rem;">Credits represent verified hours, rural businesses advised, and successful client turnarounds.</p>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 2.25rem; font-weight: 800; color: #FBBF24; line-height: 1;">{{ mentor.credits.positive_feedback_rating }} ★</div>
+          <div style="font-size: 0.775rem; color: #94A3B8; margin-top: 0.25rem;">Peer Rating</div>
+        </div>
+      </div>
+
+      <div class="credit-metrics-grid">
+        <div class="credit-metric-box">
+          <div class="number">{{ mentor.credits.entrepreneurs_mentored }}</div>
+          <div class="label">Entrepreneurs Mentored</div>
+        </div>
+        <div class="credit-metric-box">
+          <div class="number">{{ mentor.credits.mentoring_hours }}h</div>
+          <div class="label">Mentoring Hours</div>
+        </div>
+        <div class="credit-metric-box">
+          <div class="number">{{ mentor.credits.rural_businesses_supported }}</div>
+          <div class="label">Rural Businesses Supported</div>
+        </div>
+        <div class="credit-metric-box">
+          <div class="number">{{ mentor.credits.successful_outcomes }}</div>
+          <div class="label">Documented Outcomes</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+      <!-- Left Column: Biography & Experiences -->
+      <div>
+        <!-- Biography -->
+        <div class="card mb-6">
+          <h3 class="mb-3">About {{ mentor.user.first_name }}</h3>
+          <p style="font-size: 0.95rem; line-height: 1.65; color: var(--text-secondary);">
+            {{ mentor.biography }}
+          </p>
+
+          <h4 style="margin-top: 1.5rem; margin-bottom: 0.75rem;">Core Expertise Areas</h4>
+          <div class="tags-wrap">
+            {% for exp in mentor.expertises.all %}
+              <span class="tag-pill" style="font-size: 0.825rem; padding: 0.35rem 0.75rem;">{{ exp.name }}</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Problems I've Helped Solve -->
+        <div class="card mb-6">
+          <h3 class="mb-4">Problems I've Helped Solve</h3>
+          {% if mentor.experiences.all %}
+            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+              {% for exp in mentor.experiences.all %}
+                <div style="background: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem;">
+                  <div class="flex justify-between items-center mb-2">
+                    <h4 style="font-size: 1.05rem; color: var(--secondary);">{{ exp.problem_type }}</h4>
+                    <span class="badge badge-teal">{{ exp.industry }}</span>
+                  </div>
+                  <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                    {{ exp.description }}
+                  </p>
+                  <div style="font-size: 0.85rem; font-weight: 600; color: #065F46; background: #ECFDF5; padding: 0.5rem 0.85rem; border-radius: var(--radius-sm);">
+                    🎯 Outcome: {{ exp.outcome }}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p style="color: var(--text-muted);">No verified case studies recorded yet.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Right Column: Availability & Mentorship Request -->
+      <div>
+        <!-- Available Diagnostic Slots -->
+        <div class="card mb-6">
+          <h3 class="mb-3">Availability Slots</h3>
+          {% if mentor.availability_slots.all %}
+            <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+              {% for slot in mentor.availability_slots.all %}
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: var(--bg-app); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                  <div>
+                    <div style="font-weight: 600; font-size: 0.875rem;">{{ slot.get_day_of_week_display }}</div>
+                    <div style="font-size: 0.775rem; color: var(--text-muted);">{{ slot.start_time|time:"g:i A" }} - {{ slot.end_time|time:"g:i A" }}</div>
+                  </div>
+                  <span class="tag-pill">{{ slot.slot_type }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p style="color: var(--text-muted); font-size: 0.85rem;">General availability upon request.</p>
+          {% endif %}
+        </div>
+
+        <!-- Request Mentorship Box -->
+        <div class="card" id="request-section" style="border: 2px solid var(--primary);">
+          <h3 class="mb-2">Request Mentorship</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+            Select one of your submitted problems and send a diagnostic request directly to {{ mentor.user.first_name }}.
+          </p>
+
+          {% if user_problems %}
+            <form method="POST" action="{% url 'entrepreneur:request_mentorship' mentor.id %}">
+              {% csrf_token %}
+              <div class="form-group">
+                <label class="form-label" for="id_problem_id">Select Problem</label>
+                <select name="problem_id" id="id_problem_id" class="form-select" required>
+                  {% for p in user_problems %}
+                    <option value="{{ p.id }}">{{ p.title|truncatechars:45 }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="id_msg">Note for {{ mentor.user.first_name }}</label>
+                <textarea name="message" id="id_msg" class="form-textarea" rows="3" placeholder="Explain why you'd value this mentor's guidance..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-full">
+                Send Mentorship Request
+              </button>
+            </form>
+          {% else %}
+            <div style="text-align: center; padding: 1rem 0;">
+              <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                You must describe a business problem before requesting mentorship.
+              </p>
+              <a href="{% url 'entrepreneur:problem_create' %}" class="btn btn-sm btn-primary">
+                Describe a Problem First
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

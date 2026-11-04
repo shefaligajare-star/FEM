@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mentor Credits & Impact — FEM{% endblock %}
+
+{% block layout %}
+<div class="dashboard-layout">
+  {% include "mentor/sidebar.html" %}
+
+  <main class="dashboard-content">
+    <div class="mb-6">
+      <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">Mentor Credits & Impact Verification</h1>
+      <p style="color: var(--text-secondary); margin: 0;">Transparent, verifiable contribution scoring calculated from verified mentoring sessions and business outcomes.</p>
+    </div>
+
+    <!-- Overall Score Banner -->
+    <div class="card mb-6" style="background: linear-gradient(135deg, #0F766E 0%, #0D9488 100%); color: white; padding: 2.5rem;">
+      <div class="flex justify-between items-center" style="flex-wrap: wrap; gap: 1.5rem;">
+        <div>
+          <span style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: #CCFBF1; font-weight: 700;">Verified Platform Contribution</span>
+          <div style="font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin: 0.35rem 0;">
+            {{ credits.credit_score }} <span style="font-size: 1.25rem; font-weight: 500; opacity: 0.85;">Impact Points</span>
+          </div>
+          <p style="color: #E6FFFA; max-width: 520px; font-size: 0.95rem; margin: 0;">
+            Earned by {{ profile.user.get_full_name|default:profile.user.username }} across completed 1-on-1 diagnostic sessions, rural enterprise support, and problem resolutions.
+          </p>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; min-width: 180px;">
+          <div style="font-size: 2.25rem; font-weight: 800;">{{ credits.positive_feedback_rating }} ★</div>
+          <span style="font-size: 0.8rem; color: #CCFBF1;">Founder Rating</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Breakdown Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+      <div class="card" style="padding: 1.5rem;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Entrepreneurs Mentored</span>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--secondary); margin: 0.25rem 0;">
+          {{ credits.entrepreneurs_mentored }}
+        </div>
+        <span style="font-size: 0.775rem; color: var(--text-muted);">Weight: 15 pts per founder</span>
+      </div>
+
+      <div class="card" style="padding: 1.5rem;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Mentoring Hours</span>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--secondary); margin: 0.25rem 0;">
+          {{ credits.mentoring_hours }} hrs
+        </div>
+        <span style="font-size: 0.775rem; color: var(--text-muted);">Weight: 8 pts per verified hr</span>
+      </div>
+
+      <div class="card" style="padding: 1.5rem;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Rural Businesses Supported</span>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--primary); margin: 0.25rem 0;">
+          {{ credits.rural_businesses_supported }}
+        </div>
+        <span style="font-size: 0.775rem; color: var(--text-muted);">Weight: 25 pts per rural founder</span>
+      </div>
+
+      <div class="card" style="padding: 1.5rem;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Successful Outcomes</span>
+        <div style="font-size: 2rem; font-weight: 800; color: #059669; margin: 0.25rem 0;">
+          {{ credits.successful_outcomes }}
+        </div>
+        <span style="font-size: 0.775rem; color: var(--text-muted);">Weight: 35 pts per verified solution</span>
+      </div>
+    </div>
+
+    <!-- Scoring Methodology Explanation -->
+    <div class="card mb-6" style="padding: 2rem;">
+      <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">How Mentor Credits are Calculated</h3>
+      <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 1rem;">
+        Mentor Credits incentivize real, impactful advisory work rather than passive presence. Scores cannot be manually edited by users. Points are mathematically weighted:
+      </p>
+      <div style="background: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; font-family: monospace; font-size: 0.875rem; color: var(--secondary); margin-bottom: 1rem;">
+        Credit Score = (Founders Mentored &times; 15) + (Mentoring Hours &times; 8) + (Rural Businesses &times; 25) + (Successful Outcomes &times; 35) + (Community Contributions &times; 5)
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        High-credit mentors receive preferential visibility in problem matching and recognized badges across the ecosystem.
+      </p>
+    </div>
+
+    <!-- Verified Completed Sessions History -->
+    <div class="card" style="padding: 2rem;">
+      <h3 style="color: var(--secondary); margin-bottom: 1rem;">Verified Mentoring Sessions Log</h3>
+      {% if completed_sessions %}
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          {% for session in completed_sessions %}
+            <div style="background: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div class="flex justify-between items-center mb-1">
+                <strong style="color: var(--secondary); font-size: 1rem;">
+                  {{ session.request.entrepreneur.get_full_name }} &bull; {{ session.request.problem.title }}
+                </strong>
+                <span class="badge badge-teal">Verified +{{ session.duration_minutes }} min</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0 0;">
+                Notes logged: "{{ session.mentor_notes|truncatewords:25 }}"
+              </p>
+              <div style="font-size: 0.775rem; color: var(--text-muted); margin-top: 0.5rem;">
+                Completed on {{ session.updated_at|date:"d M Y @ H:i" }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin: 0;">
+          No completed sessions recorded yet. Completed diagnostic sessions automatically log here and award impact credits.
+        </p>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}

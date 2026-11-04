@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Account Settings — FEM{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 3rem 1.5rem;">
+  <div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--secondary);">Account Settings</h1>
+    <p style="color: var(--text-secondary);">Manage your login security, role preferences, and profile data.</p>
+  </div>
+
+  <div class="card mb-6" style="padding: 2rem;">
+    <h3 style="color: var(--secondary); margin-bottom: 0.5rem;">Account Overview</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+      <div style="background: var(--bg-app); padding: 1rem; border-radius: var(--radius-sm);">
+        <span style="font-size: 0.8rem; color: var(--text-muted);">USERNAME</span>
+        <div style="font-weight: 600;">{{ user_obj.username }}</div>
+      </div>
+      <div style="background: var(--bg-app); padding: 1rem; border-radius: var(--radius-sm);">
+        <span style="font-size: 0.8rem; color: var(--text-muted);">PRIMARY EMAIL</span>
+        <div style="font-weight: 600;">{{ user_obj.email }}</div>
+      </div>
+      <div style="background: var(--bg-app); padding: 1rem; border-radius: var(--radius-sm);">
+        <span style="font-size: 0.8rem; color: var(--text-muted);">CURRENT ROLE</span>
+        <div style="font-weight: 600; color: var(--primary);">{{ user_obj.get_role_display }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-6" style="padding: 2rem;">
+    <div class="flex justify-between items-center">
+      <div>
+        <h3 style="color: var(--secondary); margin-bottom: 0.35rem;">Password & Security</h3>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin: 0;">Regularly updating your password safeguards your conversations and business challenges.</p>
+      </div>
+      <a href="{% url 'accounts:password_change' %}" class="btn btn-primary">Change Password</a>
+    </div>
+  </div>
+
+  <div class="card mb-6" style="padding: 2rem;">
+    <div class="flex justify-between items-center">
+      <div>
+        <h3 style="color: var(--secondary); margin-bottom: 0.35rem;">Profile & Biography</h3>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin: 0;">Update your name, contact phone, region, avatar, and personal statement.</p>
+      </div>
+      <a href="{% url 'accounts:profile_edit' %}" class="btn btn-outline">Edit Profile</a>
+    </div>
+  </div>
+
+  <div class="card" style="padding: 2rem; border-left: 4px solid #EF4444;">
+    <div class="flex justify-between items-center">
+      <div>
+        <h3 style="color: #DC2626; margin-bottom: 0.35rem;">Delete Account</h3>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin: 0;">Permanently remove your FEM account and all associated profile information.</p>
+      </div>
+      <a href="{% url 'accounts:delete_account' %}" class="btn btn-outline" style="color: #DC2626; border-color: #DC2626;">Close Account</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

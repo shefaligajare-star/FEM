@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}User Profile — FEM{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 3rem 1.5rem;">
+  <div class="card" style="padding: 2.5rem; margin-bottom: 2rem;">
+    <div class="flex items-center gap-6" style="flex-wrap: wrap;">
+      <img src="{{ user_obj.avatar_url|default:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' }}" alt="{{ user_obj.display_name }}" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-light);">
+      <div style="flex-grow: 1;">
+        <div class="flex items-center gap-3">
+          <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--secondary); margin: 0;">{{ user_obj.display_name }}</h1>
+          <span class="badge {% if user_obj.is_mentor %}badge-teal{% elif user_obj.is_admin_user %}badge-amber{% else %}badge-blue{% endif %}">
+            {{ user_obj.get_role_display }}
+          </span>
+        </div>
+        <div style="font-size: 0.95rem; color: var(--text-muted); margin-top: 0.35rem;">
+          @{{ user_obj.username }} &bull; Member since {{ user_obj.date_joined|date:"F Y" }}
+        </div>
+        <div style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem;">
+          📍 {{ user_obj.city|default:"Regional" }}{% if user_obj.region %}, {{ user_obj.region }}{% endif %}
+        </div>
+      </div>
+      <div>
+        <a href="{% url 'accounts:profile_edit' %}" class="btn btn-outline">Edit Profile</a>
+      </div>
+    </div>
+
+    {% if user_obj.bio %}
+      <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+        <h4 style="font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Biography</h4>
+        <p style="color: var(--text-secondary); line-height: 1.6;">{{ user_obj.bio }}</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Role specific summary details -->
+  {% if user_obj.is_entrepreneur and user_obj.entrepreneur_profile %}
+    <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+      <div class="flex justify-between items-center mb-4">
+        <h3 style="color: var(--secondary);">Venture Details</h3>
+        <a href="{% url 'entrepreneur:profile' %}" class="btn btn-sm btn-outline">Edit Business Profile</a>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+        <div>
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Business Name</span>
+          <div style="font-weight: 600; font-size: 1.05rem;">{{ user_obj.entrepreneur_profile.business_name }}</div>
+        </div>
+        <div>
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Industry</span>
+          <div style="font-weight: 600;">{{ user_obj.entrepreneur_profile.industry }}</div>
+        </div>
+        <div>
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Business Stage</span>
+          <div style="font-weight: 600;">{{ user_obj.entrepreneur_profile.business_stage }}</div>
+        </div>
+        <div>
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Focus</span>
+          <div style="font-weight: 600;">{% if user_obj.entrepreneur_profile.is_rural_business %}Rural / Regional Business{% else %}Urban / Scale{% endif %}</div>
+        </div>
+      </div>
+    </div>
+  {% elif user_obj.is_mentor and user_obj.mentor_profile %}
+    <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+      <div class="flex justify-between items-center mb-4">
+        <h3 style="color: var(--secondary);">Mentor Advisory Profile</h3>
+        <a href="{% url 'mentor:profile' %}" class="btn btn-sm btn-outline">Edit Mentor Profile</a>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+        <div>
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Title</span>
+          <div style="font-weight: 600;">{{ user_obj.mentor_profile.professional_title }}</div>
+        </div>
+        <div>
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Primary Industry</span>
+          <div style="font-weight: 600;">{{ user_obj.mentor_profile.primary_industry }}</div>
+        </div>
+        <div>
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Experience</span>
+          <div style="font-weight: 600;">{{ user_obj.mentor_profile.years_of_experience }} Years</div>
+        </div>
+        <div>
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Mentor Credits</span>
+          <div style="font-weight: 700; color: var(--primary);">{{ user_obj.mentor_profile.credits.credit_score }} pts</div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="flex justify-between items-center mt-6">
+    <a href="{% url 'dashboard_router' %}" class="btn btn-outline">&larr; Return to Dashboard</a>
+    <a href="{% url 'accounts:settings' %}" class="btn btn-outline">Account Settings</a>
+  </div>
+</div>
+{% endblock %}

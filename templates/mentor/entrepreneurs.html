@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mentees & Founders — Mentor Workspace{% endblock %}
+
+{% block layout %}
+<div class="dashboard-layout">
+  {% include "mentor/sidebar.html" %}
+
+  <main class="dashboard-content">
+    <div class="mb-6">
+      <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">Mentees & Guided Founders</h1>
+      <p style="color: var(--text-secondary); margin: 0;">Founders you are actively guiding or have advised on the FEM platform.</p>
+    </div>
+
+    {% if accepted_requests %}
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+        {% for req in accepted_requests %}
+          <div class="card" style="display: flex; flex-direction: column;">
+            <div class="flex items-center gap-4 mb-3">
+              <img src="{{ req.entrepreneur.avatar_url|default:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' }}" alt="{{ req.entrepreneur.display_name }}" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover;">
+              <div>
+                <h3 style="font-size: 1.1rem; margin: 0; color: var(--secondary);">
+                  {{ req.entrepreneur.get_full_name|default:req.entrepreneur.username }}
+                </h3>
+                <span style="font-size: 0.825rem; color: var(--text-muted);">
+                  {{ req.problem.industry }} &bull; {{ req.entrepreneur.city|default:"Regional" }}
+                </span>
+              </div>
+            </div>
+
+            <div style="background: var(--bg-app); padding: 0.85rem 1rem; border-radius: var(--radius-sm); margin-bottom: 1rem; flex-grow: 1;">
+              <strong style="font-size: 0.775rem; color: var(--text-muted); text-transform: uppercase;">Problem:</strong>
+              <div style="font-size: 0.9rem; font-weight: 600; color: var(--secondary); margin-top: 0.15rem;">
+                {{ req.problem.title }}
+              </div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem;">
+                Status: <span class="badge {% if req.status == 'COMPLETED' %}badge-teal{% else %}badge-blue{% endif %}">{{ req.get_status_display }}</span>
+              </div>
+            </div>
+
+            <div class="flex gap-2">
+              <a href="{% url 'messaging:start_conversation' req.entrepreneur.id %}" class="btn btn-sm btn-outline" style="flex: 1; text-align: center;">
+                Message
+              </a>
+              {% if req.session and req.session.status == 'SCHEDULED' %}
+                <a href="{% url 'mentor:complete_session' req.session.id %}" class="btn btn-sm btn-primary" style="flex: 1; text-align: center;">
+                  Complete Session
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="card text-center" style="padding: 4rem 2rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">👥</div>
+        <h3>No active mentees yet</h3>
+        <p style="color: var(--text-secondary); max-width: 480px; margin: 0.5rem auto 1.5rem auto;">
+          Accept incoming requests from entrepreneurs to begin mentoring relationships.
+        </p>
+        <a href="{% url 'mentor:requests' %}" class="btn btn-primary">Review Requests</a>
+      </div>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}

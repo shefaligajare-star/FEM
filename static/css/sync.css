@@ -1,0 +1,123 @@
+/* ===================================================================
+   OFFLINE-FIRST SYNCHRONIZATION STATUS & DRAWER UI
+   =================================================================== */
+
+/* Offline Status Banner */
+.offline-banner {
+  display: none;
+  background-color: #1E293B;
+  color: #F8FAFC;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.offline-banner.visible {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.offline-banner.banner-offline {
+  background-color: #334155;
+}
+
+.offline-banner.banner-syncing {
+  background-color: #0F766E;
+}
+
+.offline-banner.banner-synced {
+  background-color: #065F46;
+}
+
+/* Offline Record Pill (displayed on items created offline) */
+.saved-offline-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 600;
+  background-color: #F1F5F9;
+  color: #64748B;
+  border: 1px solid #CBD5E1;
+}
+
+.saved-offline-tag.synced {
+  background-color: var(--success-light);
+  color: var(--success);
+  border-color: #A7F3D0;
+}
+
+/* Sync Drawer / Details Modal */
+.sync-modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.sync-modal-backdrop.active {
+  display: flex;
+}
+
+.sync-modal {
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  width: 90%;
+  max-width: 540px;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-color);
+  padding: 2rem;
+  animation: modalScaleIn 0.25s ease;
+}
+
+.sync-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.sync-modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.sync-queue-list {
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+}
+
+.sync-queue-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.85rem;
+}
+
+.sync-queue-item:last-child {
+  border-bottom: none;
+}
+
+@keyframes modalScaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}

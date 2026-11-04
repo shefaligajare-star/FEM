@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mentor Verification — Admin Console{% endblock %}
+
+{% block layout %}
+<div class="dashboard-layout">
+  {% include "admin_dashboard/sidebar.html" %}
+
+  <main class="dashboard-content">
+    <div class="mb-6">
+      <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">Mentor Verification & Oversight</h1>
+      <p style="color: var(--text-secondary); margin: 0;">Review credentials, industry experience, and verify mentor eligibility for matching recommendations.</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+      {% for mentor in mentors %}
+        <div class="card" style="padding: 1.75rem;">
+          <div class="flex justify-between items-center mb-3" style="flex-wrap: wrap; gap: 1rem;">
+            <div class="flex items-center gap-4">
+              <img src="{{ mentor.user.avatar_url|default:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' }}" alt="{{ mentor.user.display_name }}" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover;">
+              <div>
+                <h3 style="font-size: 1.15rem; color: var(--secondary); margin: 0;">
+                  {{ mentor.user.get_full_name|default:mentor.user.username }}
+                </h3>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">
+                  {{ mentor.professional_title }} &bull; {{ mentor.primary_industry }} &bull; {{ mentor.years_of_experience }} Years Exp
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <span class="badge {% if mentor.verification_status == 'VERIFIED' %}badge-teal{% elif mentor.verification_status == 'PENDING' %}badge-amber{% else %}badge-red{% endif %}">
+                {{ mentor.get_verification_status_display }}
+              </span>
+              <span style="font-weight: 700; color: var(--primary); font-size: 0.95rem;">
+                {{ mentor.credits.credit_score }} Credits
+              </span>
+            </div>
+          </div>
+
+          <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+            {{ mentor.biography }}
+          </p>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem;">
+            {% for exp in mentor.expertises.all %}
+              <span class="tag">{{ exp.name }}</span>
+            {% empty %}
+              <span class="tag">General Advisory</span>
+            {% endfor %}
+          </div>
+
+          <div class="flex justify-between items-center" style="border-top: 1px solid var(--border-color); padding-top: 1rem;">
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              Joined: {{ mentor.created_at|date:"d M Y" }} &bull; Rural Experience: {% if mentor.rural_business_experience %}Yes{% else %}No{% endif %}
+            </div>
+
+            <form method="POST" action="{% url 'admin_dashboard:mentors' %}" style="display: flex; gap: 0.5rem;">
+              {% csrf_token %}
+              <input type="hidden" name="mentor_id" value="{{ mentor.id }}">
+              {% if mentor.verification_status != 'VERIFIED' %}
+                <button type="submit" name="action" value="verify" class="btn btn-sm btn-primary">Verify Mentor</button>
+              {% endif %}
+              {% if mentor.verification_status != 'REJECTED' %}
+                <button type="submit" name="action" value="reject" class="btn btn-sm btn-outline" style="color: #DC2626; border-color: #FCA5A5;">Decline</button>
+              {% endif %}
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </main>
+</div>
+{% endblock %}

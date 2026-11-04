@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Notifications & Alerts — FEM{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 3rem 1.5rem;">
+  <div class="flex justify-between items-center mb-6" style="flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <h1 style="font-size: 2rem; font-weight: 800; color: var(--secondary); margin-bottom: 0.25rem;">Notifications</h1>
+      <p style="color: var(--text-secondary); margin: 0;">Stay informed on mentorship requests, sessions, and community replies.</p>
+    </div>
+
+    <form method="POST" action="{% url 'notifications:list' %}">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="mark_all_read">
+      <button type="submit" class="btn btn-outline btn-sm">Mark All as Read</button>
+    </form>
+  </div>
+
+  {% if notifications %}
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      {% for notif in notifications %}
+        <div class="card" style="padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; {% if not notif.read_status %}border-left: 4px solid var(--primary); background: #F0FDF4;{% endif %}">
+          <div style="flex: 1;">
+            <div class="flex items-center gap-2 mb-1">
+              <strong style="color: var(--secondary); font-size: 0.95rem;">{{ notif.title }}</strong>
+              {% if not notif.read_status %}
+                <span class="badge badge-teal">New</span>
+              {% endif %}
+            </div>
+            <p style="font-size: 0.875rem; color: var(--text-secondary); margin: 0 0 0.35rem 0;">
+              {{ notif.message }}
+            </p>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">
+              {{ notif.created_at|date:"d M Y @ H:i" }}
+            </span>
+          </div>
+
+          <div>
+            {% if notif.action_url %}
+              <a href="{% url 'notifications:mark_read' notif.id %}" class="btn btn-sm btn-primary">
+                View &rarr;
+              </a>
+            {% else %}
+              {% if not notif.read_status %}
+                <a href="{% url 'notifications:mark_read' notif.id %}" class="btn btn-sm btn-outline">
+                  Mark Read
+                </a>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card text-center" style="padding: 4rem 2rem;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🔔</div>
+      <h3>No notifications</h3>
+      <p style="color: var(--text-secondary); max-width: 480px; margin: 0.5rem auto 1.5rem auto;">
+        You're all caught up! New request updates, session reminders, and replies will appear here.
+      </p>
+      <a href="{% url 'dashboard_router' %}" class="btn btn-outline">&larr; Return to Dashboard</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

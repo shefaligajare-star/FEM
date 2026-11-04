@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Join FEM — Flourishing Entrepreneurs and Mentors{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 3.5rem 1.5rem;">
+  <div class="card" style="max-width: 640px; margin: 0 auto; padding: 2.5rem;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <div class="brand-icon" style="margin: 0 auto 1rem auto; width: 48px; height: 48px; font-size: 1.35rem;">FEM</div>
+      <h2>Join the FEM Network</h2>
+      <p style="font-size: 0.95rem; margin-top: 0.35rem;">Choose your role to get a tailored entrepreneurial workspace</p>
+    </div>
+
+    <form method="POST" action="{% url 'signup' %}">
+      {% csrf_token %}
+
+      <!-- Role Selection Cards -->
+      <div class="form-group">
+        <label class="form-label">I am joining as an:</label>
+        <div class="role-selection-grid">
+          <label class="role-card-label" id="role-label-entrepreneur">
+            <input type="radio" name="role" value="ENTREPRENEUR" style="position: absolute; opacity: 0;" {% if initial_role == 'ENTREPRENEUR' %}checked{% endif %}>
+            <div class="role-card-inner">
+              <div class="role-title">🌱 Entrepreneur</div>
+              <div class="role-desc">I have a business or venture and want problem-based mentorship, collaboration & learning.</div>
+            </div>
+          </label>
+
+          <label class="role-card-label" id="role-label-mentor">
+            <input type="radio" name="role" value="MENTOR" style="position: absolute; opacity: 0;" {% if initial_role == 'MENTOR' %}checked{% endif %}>
+            <div class="role-card-inner">
+              <div class="role-title">🎓 Mentor</div>
+              <div class="role-desc">I am an experienced practitioner ready to guide entrepreneurs through real hurdles and earn Mentor Credits.</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Account Credentials -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="id_first_name">First Name</label>
+          {{ form.first_name }}
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="id_last_name">Last Name</label>
+          {{ form.last_name }}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="id_username">Username</label>
+          {{ form.username }}
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="id_email">Email Address</label>
+          {{ form.email }}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="id_city">City / Town</label>
+          {{ form.city }}
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="id_region">Region / State</label>
+          {{ form.region }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_bio">Brief Introduction / Background</label>
+        {{ form.bio }}
+        <div class="form-hint">Tell the network about your venture or professional areas of expertise.</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="id_password">Create Password</label>
+          {{ form.password }}
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="id_confirm_password">Confirm Password</label>
+          {{ form.confirm_password }}
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full mb-4" style="padding: 0.85rem; font-size: 1rem;">
+        Complete Registration
+      </button>
+
+      <div class="text-center" style="font-size: 0.875rem;">
+        <span class="text-muted">Already have an account?</span>
+        <a href="{% url 'login' %}" style="font-weight: 600;">Sign In</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Simple role radio selector visual toggle
+  document.querySelectorAll('.role-card-label').forEach(label => {
+    const radio = label.querySelector('input[type="radio"]');
+    if (radio.checked) label.classList.add('selected');
+
+    label.addEventListener('click', () => {
+      document.querySelectorAll('.role-card-label').forEach(l => l.classList.remove('selected'));
+      label.classList.add('selected');
+    });
+  });
+</script>
+{% endblock %}

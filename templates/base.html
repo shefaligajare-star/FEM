@@ -1,0 +1,215 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Flourishing Entrepreneurs and Mentors (FEM) — Problem-first mentorship and offline-first collaboration ecosystem.">
+  <meta name="theme-color" content="#0D9488">
+  <title>{% block title %}Flourishing Entrepreneurs and Mentors (FEM){% endblock %}</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="{% static 'manifest.json' %}">
+
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Design System & Modular CSS -->
+  <link rel="stylesheet" href="{% static 'css/variables.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+  <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+  <link rel="stylesheet" href="{% static 'css/cards.css' %}">
+  <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  <link rel="stylesheet" href="{% static 'css/community.css' %}">
+  <link rel="stylesheet" href="{% static 'css/stories.css' %}">
+  <link rel="stylesheet" href="{% static 'css/sync.css' %}">
+  <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- Persistent Offline Status Notification Banner -->
+  <div id="offline-banner" class="offline-banner" role="status" aria-live="polite"></div>
+
+  <!-- Header / Navigation Bar -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="brand">
+        <div class="brand-icon">FEM</div>
+        <div class="brand-text">
+          <span class="brand-title">Flourishing Entrepreneurs & Mentors</span>
+          <span class="brand-subtitle">Problem-First Entrepreneurial Ecosystem</span>
+        </div>
+      </a>
+
+      <!-- Global Search -->
+      <form action="{% url 'global_search' %}" method="GET" class="header-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" name="q" placeholder="Search mentors, problems, stories..." value="{{ request.GET.q }}">
+      </form>
+
+      <!-- Navigation & Action Links -->
+      <nav class="nav-links" aria-label="Main Navigation">
+        <!-- Subtle Offline Sync Status Pill -->
+        <button type="button" class="sync-status-indicator" id="sync-status-indicator" title="Click to view offline synchronization details">
+          <span class="sync-dot synced" id="sync-dot"></span>
+          <span id="sync-label">Synced</span>
+        </button>
+
+        <a href="{% url 'mentor_directory' %}" class="nav-link">Mentors</a>
+        <a href="{% url 'community:feed' %}" class="nav-link">Community</a>
+        <a href="{% url 'collaboration:board' %}" class="nav-link">Collaborate</a>
+        <a href="{% url 'stories:story_list' %}" class="nav-link">Stories</a>
+
+        {% if user.is_authenticated %}
+          <a href="{% url 'messaging:inbox' %}" class="nav-link" title="Messages">
+            Messages
+            {% if unread_messages_count > 0 %}
+              <span class="badge badge-teal">{{ unread_messages_count }}</span>
+            {% endif %}
+          </a>
+
+          <a href="{% url 'notifications:list' %}" class="nav-link" title="Notifications">
+            Alerts
+            {% if unread_notifications_count > 0 %}
+              <span class="badge badge-amber">{{ unread_notifications_count }}</span>
+            {% endif %}
+          </a>
+
+          <a href="{% url 'dashboard_router' %}" class="btn btn-sm btn-primary">
+            Dashboard
+          </a>
+
+          <a href="{% url 'accounts:settings' %}" class="nav-link" title="Account Settings">
+            Settings
+          </a>
+
+          <a href="{% url 'logout' %}" class="btn btn-sm btn-outline">
+            Logout
+          </a>
+        {% else %}
+          <a href="{% url 'how_it_works' %}" class="nav-link">How It Works</a>
+          <a href="{% url 'login' %}" class="btn btn-sm btn-outline">Sign In</a>
+          <a href="{% url 'signup' %}" class="btn btn-sm btn-primary">Join FEM</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <!-- Global Flash Messages -->
+  {% if messages %}
+    <div class="container messages-container" style="margin-top: 1rem;">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          <span>{{ message }}</span>
+          <button type="button" class="alert-close" aria-label="Close">&times;</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Main Content Layout Block -->
+  {% block layout %}
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+  {% endblock %}
+
+  <!-- Comprehensive Platform Footer -->
+  <footer style="background-color: #0F172A; color: #94A3B8; border-top: 1px solid #1E293B; padding: 4rem 1.5rem 2rem 1.5rem; margin-top: auto;">
+    <div class="container">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem; margin-bottom: 3rem;">
+        
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 1rem;">
+            <div style="width: 34px; height: 34px; border-radius: var(--radius-sm); background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.95rem;">FEM</div>
+            <span style="font-weight: 700; color: white; font-size: 1.05rem;">Flourishing Entrepreneurs & Mentors</span>
+          </div>
+          <p style="font-size: 0.85rem; line-height: 1.6; color: #94A3B8;">
+            A problem-first entrepreneurial ecosystem connecting founders with mentors possessing verified experience solving real challenges. Built for offline resilience.
+          </p>
+        </div>
+
+        <div>
+          <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Ecosystem</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.6rem;">
+            <li><a href="{% url 'mentor_directory' %}" style="color: #CBD5E1; text-decoration: none;">Mentor Directory</a></li>
+            <li><a href="{% url 'community:feed' %}" style="color: #CBD5E1; text-decoration: none;">Community Feed</a></li>
+            <li><a href="{% url 'collaboration:board' %}" style="color: #CBD5E1; text-decoration: none;">Collaboration Board</a></li>
+            <li><a href="{% url 'stories:story_list' %}" style="color: #CBD5E1; text-decoration: none;">Field Stories (Success & Lessons)</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">About & Guides</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.6rem;">
+            <li><a href="{% url 'about' %}" style="color: #CBD5E1; text-decoration: none;">About FEM</a></li>
+            <li><a href="{% url 'how_it_works' %}" style="color: #CBD5E1; text-decoration: none;">How It Works</a></li>
+            <li><a href="{% url 'faq' %}" style="color: #CBD5E1; text-decoration: none;">Frequently Asked Questions</a></li>
+            <li><a href="{% url 'contact' %}" style="color: #CBD5E1; text-decoration: none;">Contact Support</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Account & Legal</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.6rem;">
+            {% if user.is_authenticated %}
+              <li><a href="{% url 'accounts:profile' %}" style="color: #CBD5E1; text-decoration: none;">My Profile</a></li>
+              <li><a href="{% url 'accounts:settings' %}" style="color: #CBD5E1; text-decoration: none;">Account Settings</a></li>
+            {% else %}
+              <li><a href="{% url 'signup' %}" style="color: #CBD5E1; text-decoration: none;">Join FEM</a></li>
+              <li><a href="{% url 'login' %}" style="color: #CBD5E1; text-decoration: none;">Sign In</a></li>
+            {% endif %}
+            <li><a href="{% url 'privacy' %}" style="color: #CBD5E1; text-decoration: none;">Privacy Policy</a></li>
+            <li><a href="{% url 'terms' %}" style="color: #CBD5E1; text-decoration: none;">Terms of Service</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div style="border-top: 1px solid #1E293B; padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.8rem; color: #64748B;">
+        <span>&copy; {% now "Y" %} Flourishing Entrepreneurs and Mentors (FEM). All rights reserved.</span>
+        <span>Offline-First Progressive Web Application &bull; IndexedDB &bull; Service Worker</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Offline Sync Queue Modal Drawer -->
+  <div id="sync-modal-backdrop" class="sync-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="sync-modal-heading">
+    <div class="sync-modal">
+      <div class="sync-modal-header">
+        <h3 id="sync-modal-heading" class="sync-modal-title">Offline Synchronization Queue</h3>
+        <button type="button" class="alert-close" id="sync-modal-close">&times;</button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+        FEM uses browser IndexedDB storage to preserve all your posts, problems, stories, and messages locally when connectivity drops. Queued actions automatically sync when online.
+      </p>
+
+      <div id="sync-queue-list" class="sync-queue-list">
+        <!-- Dynamically rendered via sync.js -->
+      </div>
+
+      <div class="flex justify-between items-center">
+        <span style="font-size: 0.8rem; color: var(--text-muted);">IndexedDB Local-First Engine</span>
+        <button type="button" id="manual-sync-trigger" class="btn btn-sm btn-primary">Sync Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="{% static 'js/indexeddb.js' %}"></script>
+  <script src="{% static 'js/sync.js' %}"></script>
+  <script src="{% static 'js/offline.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+
+</body>
+</html>

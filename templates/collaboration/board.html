@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Peer Collaboration Board — FEM{% endblock %}
+
+{% block layout %}
+<div class="container" style="padding: 3rem 1.5rem;">
+  <div class="flex justify-between items-center mb-6" style="flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <span class="badge badge-teal" style="margin-bottom: 0.35rem;">Founder Partnerships</span>
+      <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--secondary); margin: 0;">
+        Entrepreneur Collaboration Board
+      </h1>
+      <p style="color: var(--text-secondary); margin: 0.25rem 0 0 0;">
+        Find peer founders to pool logistics, share equipment, co-source raw materials, and expand market distribution.
+      </p>
+    </div>
+    <a href="{% url 'collaboration:create' %}" class="btn btn-primary btn-lg">
+      + Post Collaboration Opportunity
+    </a>
+  </div>
+
+  <!-- Search & Filter Controls -->
+  <div class="card mb-6" style="padding: 1.5rem;">
+    <form method="GET" action="{% url 'collaboration:board' %}" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) auto; gap: 1rem; align-items: end;">
+      <div class="form-group" style="margin: 0;">
+        <label class="form-label" for="collab-q">Search Collaboration Needs</label>
+        <input type="text" id="collab-q" name="q" class="form-control" placeholder="Packaging, transport, materials..." value="{{ search_q|default:'' }}">
+      </div>
+
+      <div class="form-group" style="margin: 0;">
+        <label class="form-label" for="collab-type">Partnership Type</label>
+        <select id="collab-type" name="type" class="form-control">
+          <option value="">All Categories</option>
+          {% for val, label in collab_types %}
+            <option value="{{ val }}" {% if selected_type == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Filter</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Collaboration Listings -->
+  {% if requests %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 1.75rem;">
+      {% for req in requests %}
+        <div class="card" style="display: flex; flex-direction: column;">
+          <div class="flex justify-between items-center mb-2">
+            <span class="badge badge-teal">{{ req.get_collaboration_type_display }}</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">{{ req.location }}</span>
+          </div>
+
+          <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--secondary);">
+            {{ req.title }}
+          </h3>
+
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+            Posted by <strong>{{ req.entrepreneur.get_full_name|default:req.entrepreneur.username }}</strong> &bull; {{ req.created_at|date:"d M Y" }}
+          </div>
+
+          <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.25rem; flex-grow: 1;">
+            {{ req.description }}
+          </p>
+
+          {% if req.tags %}
+            <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1.25rem;">
+              {% for tag in req.tags.split %}
+                <span class="tag">#{{ tag }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div style="border-top: 1px solid var(--border-color); padding-top: 1rem;">
+            {% if req.entrepreneur == user %}
+              <div class="flex justify-between items-center">
+                <span class="badge badge-blue">Your Listing</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">{{ req.interests.count }} expressions of interest</span>
+              </div>
+            {% elif req.id in my_proposals %}
+              <div class="flex justify-between items-center">
+                <span class="badge badge-teal">✓ Interest Expressed</span>
+                <a href="{% url 'messaging:start_conversation' req.entrepreneur.id %}" class="btn btn-sm btn-outline">Message</a>
+              </div>
+            {% else %}
+              <form method="POST" action="{% url 'collaboration:express_interest' req.id %}">
+                {% csrf_token %}
+                <div class="form-group mb-2">
+                  <input type="text" name="pitch" class="form-control form-control-sm" placeholder="Brief note: How can your venture collaborate?" required>
+                </div>
+                <div class="flex justify-between items-center">
+                  <a href="{% url 'messaging:start_conversation' req.entrepreneur.id %}" class="btn btn-sm btn-outline">Direct Message</a>
+                  <button type="submit" class="btn btn-sm btn-primary">Connect & Partner</button>
+                </div>
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card text-center" style="padding: 4rem 2rem;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🤝</div>
+      <h3>No collaboration requests found</h3>
+      <p style="color: var(--text-secondary); max-width: 480px; margin: 0.5rem auto 1.5rem auto;">
+        Be the first entrepreneur to post a partnership opportunity in this category.
+      </p>
+      <a href="{% url 'collaboration:create' %}" class="btn btn-primary">+ Post New Opportunity</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

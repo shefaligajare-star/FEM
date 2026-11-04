@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mentoring Requests — Mentor Workspace{% endblock %}
+
+{% block layout %}
+<div class="dashboard-layout">
+  {% include "mentor/sidebar.html" %}
+
+  <main class="dashboard-content">
+    <div class="mb-6">
+      <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">Incoming Mentoring Requests</h1>
+      <p style="color: var(--text-secondary); margin: 0;">Review requests submitted by entrepreneurs who matched your verified track record.</p>
+    </div>
+
+    {% if requests %}
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        {% for req in requests %}
+          <div class="card" style="padding: 1.75rem;">
+            <div class="flex justify-between items-center mb-3" style="flex-wrap: wrap; gap: 0.5rem;">
+              <div class="flex items-center gap-3">
+                <h3 style="margin: 0; font-size: 1.2rem; color: var(--secondary);">
+                  {{ req.entrepreneur.get_full_name|default:req.entrepreneur.username }}
+                </h3>
+                <span class="badge {% if req.status == 'PENDING' %}badge-amber{% elif req.status == 'ACCEPTED' %}badge-teal{% elif req.status == 'COMPLETED' %}badge-blue{% else %}badge-red{% endif %}">
+                  {{ req.get_status_display }}
+                </span>
+                {% if req.problem.is_rural_business %}
+                  <span class="badge badge-teal">Rural Enterprise</span>
+                {% endif %}
+              </div>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">
+                Received {{ req.created_at|date:"d M Y @ H:i" }}
+              </span>
+            </div>
+
+            <div style="background: var(--bg-app); border-left: 4px solid var(--primary); padding: 1rem 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1rem;">
+              <strong style="color: var(--primary); font-size: 0.85rem; text-transform: uppercase;">Business Problem:</strong>
+              <h4 style="margin: 0.25rem 0 0.5rem 0; color: var(--secondary);">{{ req.problem.title }}</h4>
+              <p style="font-size: 0.875rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+                {{ req.problem.description }}
+              </p>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+                Industry: {{ req.problem.industry }} &bull; Stage: {{ req.problem.business_stage }} &bull; Location: {{ req.problem.location|default:"Regional" }}
+              </div>
+            </div>
+
+            <div style="margin-bottom: 1.25rem;">
+              <strong style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Personal Note from Founder:</strong>
+              <p style="font-size: 0.95rem; color: var(--text-primary); margin-top: 0.25rem; font-style: italic;">
+                "{{ req.message }}"
+              </p>
+            </div>
+
+            <div class="flex justify-between items-center" style="flex-wrap: wrap; gap: 0.75rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+              <a href="{% url 'messaging:start_conversation' req.entrepreneur.id %}" class="btn btn-sm btn-outline">
+                Message Founder
+              </a>
+
+              <div class="flex gap-2">
+                {% if req.status == 'PENDING' %}
+                  <a href="{% url 'mentor:respond_request' req.id 'decline' %}" class="btn btn-sm btn-outline">Decline</a>
+                  <a href="{% url 'mentor:respond_request' req.id 'accept' %}" class="btn btn-sm btn-primary">Accept & Create Session</a>
+                {% elif req.status == 'ACCEPTED' and req.session %}
+                  <a href="{% url 'mentor:complete_session' req.session.id %}" class="btn btn-sm btn-primary">Complete Session</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="card text-center" style="padding: 4rem 2rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+        <h3>No mentoring requests found</h3>
+        <p style="color: var(--text-secondary); max-width: 480px; margin: 0.5rem auto 1.5rem auto;">
+          When entrepreneurs submit problems that match your expertise, their requests will appear here for review.
+        </p>
+        <a href="{% url 'mentor:dashboard' %}" class="btn btn-outline">&larr; Return to Overview</a>
+      </div>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}

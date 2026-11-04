@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Server Error (500) — FEM{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 6rem 1.5rem; text-align: center;">
+  <div style="font-size: 3.5rem; margin-bottom: 1rem;">⚠️</div>
+  <h1 style="font-size: 2.75rem; font-weight: 800; color: var(--secondary); margin-bottom: 0.75rem;">
+    Something Went Wrong
+  </h1>
+  <p style="font-size: 1.15rem; color: var(--text-secondary); max-width: 520px; margin: 0 auto 2rem auto; line-height: 1.6;">
+    An internal server error occurred. Our engineering and database systems have logged this issue.
+  </p>
+  <div class="flex justify-center gap-4">
+    <a href="{% url 'landing' %}" class="btn btn-primary">Return Home</a>
+    <a href="{% url 'contact' %}" class="btn btn-outline">Report Issue</a>
+  </div>
+</div>
+{% endblock %}

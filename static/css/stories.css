@@ -1,0 +1,138 @@
+/* ===================================================================
+   SUCCESS & FAILURE STORIES
+   Normalizing failure as a vital learning stepping stone
+   =================================================================== */
+
+.story-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.story-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-hover);
+}
+
+.story-card.story-failure {
+  border-left: 5px solid #F59E0B; /* Amber badge for learning from failure */
+}
+
+.story-card.story-success {
+  border-left: 5px solid #10B981; /* Emerald badge for success */
+}
+
+.story-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: var(--radius-full);
+  font-size: 0.775rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 1rem;
+}
+
+.story-badge-failure {
+  background-color: #FEF3C7;
+  color: #B45309;
+}
+
+.story-badge-success {
+  background-color: #D1FAE5;
+  color: #065F46;
+}
+
+.story-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+  line-height: 1.3;
+}
+
+.story-context {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+
+.story-summary {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin-bottom: 1.75rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--border-color);
+}
+
+/* 3-Step Learning Framework Grid */
+.story-reflection-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.reflection-column {
+  background-color: var(--bg-app);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+
+.reflection-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.reflection-title.what-happened { color: var(--secondary); }
+.reflection-title.what-learned { color: #0F766E; }
+.reflection-title.what-differently { color: #B45309; }
+
+.reflection-body {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+/* Key Takeaway Rule of Thumb */
+.story-takeaway-box {
+  background: linear-gradient(135deg, #0F172A, #1E293B);
+  color: #F8FAFC;
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.takeaway-quote {
+  font-size: 1rem;
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.story-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.25rem;
+}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Platform Analytics — Admin Console{% endblock %}
+
+{% block layout %}
+<div class="dashboard-layout">
+  {% include "admin_dashboard/sidebar.html" %}
+
+  <main class="dashboard-content">
+    <div class="mb-6">
+      <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">Platform Analytics & Health</h1>
+      <p style="color: var(--text-secondary); margin: 0;">Operational metrics, session completion rates, and problem category distributions.</p>
+    </div>
+
+    <!-- Core Metrics -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+      <div class="card" style="padding: 1.5rem; border-top: 3px solid var(--primary);">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Diagnostic Sessions</span>
+        <div style="font-size: 2.25rem; font-weight: 800; color: var(--secondary); margin: 0.25rem 0;">{{ total_sessions }}</div>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Scheduled through matching</span>
+      </div>
+
+      <div class="card" style="padding: 1.5rem; border-top: 3px solid #10B981;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Completed Sessions</span>
+        <div style="font-size: 2.25rem; font-weight: 800; color: #059669; margin: 0.25rem 0;">{{ completed_sessions }}</div>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Action plans logged</span>
+      </div>
+
+      <div class="card" style="padding: 1.5rem; border-top: 3px solid #F59E0B;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Average Founder Rating</span>
+        <div style="font-size: 2.25rem; font-weight: 800; color: #D97706; margin: 0.25rem 0;">{{ avg_rating }} ★</div>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Cross-ecosystem satisfaction</span>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+      <!-- Challenge Categories Breakdown -->
+      <div class="card" style="padding: 1.75rem;">
+        <h3 style="color: var(--secondary); margin-bottom: 1.25rem; font-size: 1.15rem;">Distribution by Problem Category</h3>
+        {% if category_stats %}
+          <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+            {% for cat in category_stats %}
+              <div>
+                <div class="flex justify-between items-center mb-1" style="font-size: 0.875rem;">
+                  <strong style="color: var(--secondary);">{{ cat.name }}</strong>
+                  <span style="color: var(--text-muted);">{{ cat.cnt }} challenges</span>
+                </div>
+                <div style="background: var(--bg-app); border-radius: 999px; height: 8px; overflow: hidden;">
+                  <div style="background: var(--primary); height: 100%; width: {{ cat.cnt }}0%;"></div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p style="color: var(--text-muted); font-size: 0.85rem;">No problem categorizations recorded yet.</p>
+        {% endif %}
+      </div>
+
+      <!-- Venture Stage Breakdown -->
+      <div class="card" style="padding: 1.75rem;">
+        <h3 style="color: var(--secondary); margin-bottom: 1.25rem; font-size: 1.15rem;">Distribution by Business Stage</h3>
+        {% if stage_breakdown %}
+          <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+            {% for stage in stage_breakdown %}
+              <div class="flex justify-between items-center" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; font-size: 0.9rem;">
+                <span style="font-weight: 600; color: var(--secondary);">{{ stage.business_stage }}</span>
+                <span class="badge badge-teal">{{ stage.count }} ventures</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p style="color: var(--text-muted); font-size: 0.85rem;">No stage breakdowns available.</p>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact Us — Flourishing Entrepreneurs and Mentors{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 4rem 1.5rem;">
+  <div style="text-align: center; margin-bottom: 3rem;">
+    <span class="badge badge-teal" style="margin-bottom: 0.5rem;">Get in Touch</span>
+    <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--secondary); margin-bottom: 0.75rem;">
+      Contact the FEM Team
+    </h1>
+    <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+      Have a question, feedback, or need platform assistance? Send us a message and our team will respond promptly.
+    </p>
+  </div>
+
+  <div class="card" style="padding: 2.5rem;">
+    <form method="POST" action="{% url 'contact' %}">
+      {% csrf_token %}
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="form-group">
+          <label class="form-label" for="contact-name">Your Full Name *</label>
+          <input type="text" id="contact-name" name="name" class="form-control" placeholder="e.g. Aarav Sharma" required value="{{ user.get_full_name|default:'' }}">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="contact-email">Email Address *</label>
+          <input type="email" id="contact-email" name="email" class="form-control" placeholder="name@domain.com" required value="{{ user.email|default:'' }}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="contact-subject">Subject</label>
+        <input type="text" id="contact-subject" name="subject" class="form-control" placeholder="What is this inquiry regarding?">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="contact-message">Message *</label>
+        <textarea id="contact-message" name="message" class="form-control" rows="5" placeholder="Share your inquiry or feedback with us..." required></textarea>
+      </div>
+
+      <div class="flex justify-between items-center mt-4">
+        <span style="font-size: 0.825rem; color: var(--text-muted);">* All marked fields are mandatory</span>
+        <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

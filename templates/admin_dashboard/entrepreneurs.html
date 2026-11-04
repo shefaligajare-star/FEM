@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Venture Directory — Admin Console{% endblock %}
+
+{% block layout %}
+<div class="dashboard-layout">
+  {% include "admin_dashboard/sidebar.html" %}
+
+  <main class="dashboard-content">
+    <div class="mb-6">
+      <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">Entrepreneur Venture Records</h1>
+      <p style="color: var(--text-secondary); margin: 0;">Inspect registered grassroots, early-stage, and scaling businesses on FEM.</p>
+    </div>
+
+    <div class="card" style="padding: 1.5rem; overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+        <thead>
+          <tr style="text-align: left; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">
+            <th style="padding: 0.75rem 1rem;">Venture / Founder</th>
+            <th style="padding: 0.75rem 1rem;">Industry</th>
+            <th style="padding: 0.75rem 1rem;">Stage</th>
+            <th style="padding: 0.75rem 1rem;">Location</th>
+            <th style="padding: 0.75rem 1rem;">Problems Filed</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ep in entrepreneurs %}
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.75rem 1rem;">
+                <strong style="color: var(--secondary); display: block;">{{ ep.business_name }}</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">
+                  Founder: {{ ep.user.get_full_name|default:ep.user.username }}
+                </span>
+              </td>
+              <td style="padding: 0.75rem 1rem; color: var(--text-secondary);">{{ ep.industry }}</td>
+              <td style="padding: 0.75rem 1rem;">
+                <span class="badge badge-teal">{{ ep.business_stage }}</span>
+              </td>
+              <td style="padding: 0.75rem 1rem; color: var(--text-muted);">
+                {{ ep.location|default:ep.user.city|default:"Regional" }}
+              </td>
+              <td style="padding: 0.75rem 1rem; font-weight: 600;">
+                {{ ep.problem_count }} challenges
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+{% endblock %}

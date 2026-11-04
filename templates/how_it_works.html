@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}How It Works — Flourishing Entrepreneurs and Mentors{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 4rem 1.5rem;">
+  <div style="text-align: center; margin-bottom: 3.5rem;">
+    <span class="badge badge-teal" style="margin-bottom: 0.5rem;">Step-by-Step Guide</span>
+    <h1 style="font-size: 2.75rem; font-weight: 800; color: var(--secondary); margin-bottom: 1rem;">
+      How the FEM Ecosystem Works
+    </h1>
+    <p style="font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6; max-width: 680px; margin: 0 auto;">
+      From problem formulation to measurable business outcomes—here is how entrepreneurs and mentors collaborate on FEM.
+    </p>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 2rem;">
+    <div class="card" style="display: flex; gap: 1.5rem; align-items: flex-start; padding: 2rem;">
+      <div style="width: 48px; height: 48px; min-width: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary-hover); font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; justify-content: center;">1</div>
+      <div>
+        <h3 style="margin-bottom: 0.5rem;">Submit Your Concrete Business Challenge</h3>
+        <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
+          Instead of wading through hundreds of resumes, you articulate the exact issue blocking your business—whether cashflow timing, packaging durability, vendor negotiations, or channel distribution.
+        </p>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; gap: 1.5rem; align-items: flex-start; padding: 2rem;">
+      <div style="width: 48px; height: 48px; min-width: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary-hover); font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; justify-content: center;">2</div>
+      <div>
+        <h3 style="margin-bottom: 0.5rem;">Intelligent Multi-Factor Matching</h3>
+        <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
+          Our transparent matching engine evaluates:
+        </p>
+        <ul style="margin: 0.5rem 0 0 1.25rem; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+          <li><strong>Domain & Expertise Match (30%)</strong> — Specific functional capabilities required</li>
+          <li><strong>Problem Similarity (30%)</strong> — Tangible problems previously resolved by the mentor</li>
+          <li><strong>Industry Experience (15%)</strong> — Depth of relevant sector exposure</li>
+          <li><strong>Business Stage (10%)</strong> — Early-stage, prototype, or growth alignment</li>
+          <li><strong>Rural / Regional Focus (10%)</strong> — Hands-on experience with grassroots supply chains</li>
+          <li><strong>Track Record (5%)</strong> — Verified outcomes logged on the platform</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; gap: 1.5rem; align-items: flex-start; padding: 2rem;">
+      <div style="width: 48px; height: 48px; min-width: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary-hover); font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; justify-content: center;">3</div>
+      <div>
+        <h3 style="margin-bottom: 0.5rem;">Review Transparent Match Explanations</h3>
+        <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
+          Every matched mentor includes a natural-language explanation showing exactly why they were recommended. You can inspect their documented past case studies and request a focused 1-on-1 session.
+        </p>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; gap: 1.5rem; align-items: flex-start; padding: 2rem;">
+      <div style="width: 48px; height: 48px; min-width: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary-hover); font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; justify-content: center;">4</div>
+      <div>
+        <h3 style="margin-bottom: 0.5rem;">Mentorship Sessions & Verified Impact Credits</h3>
+        <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
+          Mentors review incoming requests, schedule diagnostic sessions, and log actionable action plans. Upon completion, verified Mentor Credits are awarded to reflect real hours and supported businesses.
+        </p>
+      </div>
+    </div>
+
+    <div class="card" style="display: flex; gap: 1.5rem; align-items: flex-start; padding: 2rem;">
+      <div style="width: 48px; height: 48px; min-width: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary-hover); font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; justify-content: center;">5</div>
+      <div>
+        <h3 style="margin-bottom: 0.5rem;">Peer Collaboration & Community</h3>
+        <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
+          Beyond mentorship, founders connect with other entrepreneurs to pool logistics, co-source raw materials, share transport routes, and exchange candid failure lessons.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 3.5rem;">
+    <a href="{% url 'signup' %}" class="btn btn-primary btn-lg">Start Today</a>
+    <a href="{% url 'mentor_directory' %}" class="btn btn-outline btn-lg" style="margin-left: 1rem;">Browse Mentors</a>
+  </div>
+</div>
+{% endblock %}

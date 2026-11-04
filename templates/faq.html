@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Frequently Asked Questions — FEM{% endblock %}
+
+{% block layout %}
+<div class="container container-narrow" style="padding: 4rem 1.5rem;">
+  <div style="text-align: center; margin-bottom: 3.5rem;">
+    <span class="badge badge-teal" style="margin-bottom: 0.5rem;">Help Center</span>
+    <h1 style="font-size: 2.75rem; font-weight: 800; color: var(--secondary); margin-bottom: 1rem;">
+      Frequently Asked Questions
+    </h1>
+    <p style="font-size: 1.15rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+      Find answers to common questions about problem-based matching, mentor credits, and offline usage.
+    </p>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+    <div class="card" style="padding: 2rem;">
+      <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">How does problem-based mentor matching work?</h3>
+      <p style="color: var(--text-secondary); line-height: 1.6;">
+        Instead of browsing high-level bios, you articulate your concrete business problem in natural language. FEM extracts key operational dimensions (finance, logistics, marketing, agriculture, etc.) and compares them with documented case histories and expertise of verified mentors. A transparent match score and explanation are provided.
+      </p>
+    </div>
+
+    <div class="card" style="padding: 2rem;">
+      <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">What are Mentor Credits?</h3>
+      <p style="color: var(--text-secondary); line-height: 1.6;">
+        Mentor Credits represent tangible, platform-verified contributions. They are computed from confirmed mentoring hours, number of entrepreneurs supported, rural businesses assisted, and verified session outcomes. Mentors cannot manually alter their verified credits.
+      </p>
+    </div>
+
+    <div class="card" style="padding: 2rem;">
+      <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">Can I use FEM when disconnected from the internet?</h3>
+      <p style="color: var(--text-secondary); line-height: 1.6;">
+        Yes! FEM is built as an offline-first Progressive Web App. Our Service Worker caches the application shell, and your browser's IndexedDB stores drafted problems, community posts, stories, and messages locally. When your connection is restored, pending actions automatically synchronize with the server.
+      </p>
+    </div>
+
+    <div class="card" style="padding: 2rem;">
+      <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">Is FEM free for grassroots and regional entrepreneurs?</h3>
+      <p style="color: var(--text-secondary); line-height: 1.6;">
+        Yes. FEM is dedicated to empowering regional and emerging founders with direct access to experienced mentors and peer collaboration opportunities.
+      </p>
+    </div>
+
+    <div class="card" style="padding: 2rem;">
+      <h3 style="color: var(--secondary); margin-bottom: 0.75rem;">How do I qualify as a Mentor?</h3>
+      <p style="color: var(--text-secondary); line-height: 1.6;">
+        Mentors register with their industry background, years of experience, and documented problems they have previously solved. Platform administrators verify mentor credentials before their profiles appear in matching recommendations.
+      </p>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 3.5rem; background: var(--bg-surface); padding: 2.5rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+    <h3 style="margin-bottom: 0.5rem;">Still have questions?</h3>
+    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Our team is here to assist you with any inquiries.</p>
+    <a href="{% url 'contact' %}" class="btn btn-primary">Contact Support</a>
+  </div>
+</div>
+{% endblock %}
