@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.db import connection
-import osfrom django.shortcuts import render, redirect
+import os 
+from django.shortcuts import render, redirect
 from django.db.models import Q
 from mentors.models import MentorProfile
 from entrepreneurs.models import EntrepreneurProfile
