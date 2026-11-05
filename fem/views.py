@@ -1,4 +1,6 @@
-from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.db import connection
+import osfrom django.shortcuts import render, redirect
 from django.db.models import Q
 from mentors.models import MentorProfile
 from entrepreneurs.models import EntrepreneurProfile
@@ -165,4 +167,5 @@ def custom_404_view(request, exception=None):
 
 def custom_500_view(request):
     return render(request, '500.html', status=500)
-
+def database_diagnostic(request):
+    return HttpResponse("Diagnostic route is working.")
