@@ -8,7 +8,6 @@ from synchronization import views as sync_views
 
 urlpatterns = [
     # Platform Core & Landing
-    path("database-diagnostic/", views.database_diagnostic, name="database_diagnostic"),
     path('', views.landing_page, name='landing'),
     path('about/', views.about_page, name='about'),
     path('how-it-works/', views.how_it_works_page, name='how_it_works'),
@@ -49,7 +48,7 @@ urlpatterns = [
 
 handler403 = 'fem.views.custom_403_view'
 handler404 = 'fem.views.custom_404_view'
-handler500 = 'fem.views.custom_500_view'
+#handler500 = 'fem.views.custom_500_view'
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
