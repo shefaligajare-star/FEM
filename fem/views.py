@@ -26,6 +26,10 @@ def landing_page(request):
     }
     return render(request, 'landing.html', context)
 
+
+# def landing_page(request):
+#     return HttpResponse("Homepage is working.")
+
 def global_search(request):
     q = request.GET.get('q', '').strip()
     category = request.GET.get('cat', 'all')
@@ -168,5 +172,23 @@ def custom_404_view(request, exception=None):
 
 def custom_500_view(request):
     return render(request, '500.html', status=500)
+# def database_diagnostic(request):
+#     return HttpResponse("Diagnostic route is working.")
+
 def database_diagnostic(request):
-    return HttpResponse("Diagnostic route is working.")
+    from django.http import HttpResponse
+    from django.db import connection
+
+    try:
+        connection.ensure_connection()
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            result = cursor.fetchone()
+
+        return HttpResponse(f"Database connected successfully: {result}")
+
+    except Exception as e:
+        return HttpResponse(
+            f"Database error: {type(e).__name__}: {e}",
+            status=500
+        )
