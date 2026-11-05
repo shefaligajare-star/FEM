@@ -177,18 +177,44 @@ def custom_500_view(request):
 
 def database_diagnostic(request):
     from django.http import HttpResponse
-    from django.db import connection
+    from mentors.models import MentorProfile
+    from stories.models import Story
+    from collaboration.models import CollaborationRequest
 
     try:
-        connection.ensure_connection()
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT 1")
-            result = cursor.fetchone()
+        mentors = list(
+            MentorProfile.objects.filter(
+                is_accepting_mentees=True
+            ).select_related(
+                'user', 'credits'
+            ).prefetch_related(
+                'expertises'
+            )[:3]
+        )
+        print("MENTOR QUERY PASSED")
 
-        return HttpResponse(f"Database connected successfully: {result}")
+        stories = list(
+            Story.objects.filter(
+                is_approved=True
+            ).select_related('author')[:3]
+        )
+        print("STORY QUERY PASSED")
+
+        collaborations = list(
+            CollaborationRequest.objects.filter(
+                status='OPEN'
+            ).select_related('entrepreneur')[:3]
+        )
+        print("COLLABORATION QUERY PASSED")
+
+        return HttpResponse(
+            f"All queries passed. Mentors: {len(mentors)}, "
+            f"Stories: {len(stories)}, "
+            f"Collaborations: {len(collaborations)}"
+        )
 
     except Exception as e:
         return HttpResponse(
-            f"Database error: {type(e).__name__}: {e}",
+            f"Query failed: {type(e).__name__}: {e}",
             status=500
         )
